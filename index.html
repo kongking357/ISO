@@ -1,0 +1,2968 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISO Boards — Luxury Handcrafted Serving Boards</title>
+<meta name="description" content="ISO Boards. Luxury Handcrafted hardwood serving boards for chefs, occasions, gifts, and the table worth remembering.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #080808;
+    --accent-primary: #555555;
+    --accent-secondary: #2a2a2a;
+    --text-primary: #f0ede8;
+    --text-secondary: #888888;
+    --status-label: #888888;
+    --lux-gold: #c9a84c;
+    --lux-gold-bright: #e8c76a;
+    /* board pose defaults */
+    --rx: 13.3deg;
+    --ry: -18.3deg;
+    --rz: 3.3deg;
+    --tx: 0%;
+    --tz: 8px;
+    --persp: 1100px;
+    --persp-deg: 53.5deg;
+    --detail-zoom-scale: 3.1;
+    --detail-zoom-x: -3%;
+    --detail-zoom-y: -3%;
+    --detail-zoom-rotx: 12deg;
+    --detail-zoom-roty: -18deg;
+  }
+  /* Light theme overrides (applied when [data-theme="light"]) */
+  [data-theme="light"] {
+    --bg-primary: #f7f7f5;
+    --bg-secondary: #ffffff;
+    --accent-primary: #dcd7d0;
+    --accent-secondary: #e9e6e3;
+    --text-primary: #151515;
+    --text-secondary: #555555;
+    --status-label: #6b6b6b;
+    --lux-gold: #b07f2a;
+    --lux-gold-bright: #d6a84a;
+  }
+
+  /* Smooth theme transitions */
+  html, body, nav, .actionbar, .board {
+    transition: background 240ms ease, color 240ms ease, border-color 240ms ease, box-shadow 240ms ease;
+  }
+
+  /* Theme toggle button */
+  .theme-toggle {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 42px; height: 42px; border-radius: 10px; border: 1px solid var(--accent-secondary);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0.02) 100%);
+    color: var(--text-secondary); cursor: pointer; font-size: 16px;
+    transition: background 0.18s, color 0.18s, border-color 0.18s;
+  }
+  .theme-toggle:hover { color: var(--text-primary); border-color: var(--accent-primary); }
+  .theme-toggle .sun, .theme-toggle .moon { pointer-events: none; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+  }
+
+  .bg-grid {
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(136,136,136,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(136,136,136,0.05) 1px, transparent 1px);
+    background-size: 56px 56px;
+    pointer-events: none; z-index: 0;
+  }
+
+  .iso-wm {
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28vw;
+    color: var(--text-primary);
+    opacity: 0.018;
+    pointer-events: none; z-index: 0;
+    white-space: nowrap;
+  }
+
+  /* cubes svg bg */
+  .cube-bg {
+    position: fixed; top: 0; right: 0;
+    width: 48vw; height: 100vh;
+    pointer-events: none; z-index: 0; opacity: 0.07;
+    object-fit: contain;
+    object-position: top right;
+  }
+
+  /* champagne glass bottom left */
+  .champagne {
+    position: fixed; bottom: 0; left: 0;
+    height: 42vh; z-index: 2;
+    opacity: 0.45; pointer-events: none;
+    object-fit: contain;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 52px;
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.9rem; letter-spacing: 0.35em;
+    color: var(--text-primary); text-decoration: none; position: relative;
+    flex-shrink: 0;
+  }
+  .nav-logo-mark {
+    display: inline-block;
+    width: 75px; height: 75px;
+    margin-left: 8px;
+    vertical-align: middle;
+    position: relative;
+    top: -2px;
+    flex-shrink: 0;
+  }
+  .nav-logo-mark img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  /* Show white logo in dark mode, black logo in light mode */
+  .nav-logo-mark .logo-dark { display: block; }
+  .nav-logo-mark .logo-light { display: none; }
+  [data-theme="light"] .nav-logo-mark .logo-dark { display: none; }
+  [data-theme="light"] .nav-logo-mark .logo-light { display: block; }
+
+  /* collections block */
+  .nav-collections {
+    display: flex; flex-direction: column;
+    align-items: flex-start; gap: 5px;
+  }
+  .nav-collections-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.64rem; letter-spacing: 0.19em;
+    color: var(--status-label); text-transform: uppercase;
+    padding-left: 4px;
+  }
+  .nav-links { display: flex; gap: 0; list-style: none; }
+  .nav-links li { position: relative; }
+  .nav-links a {
+    display: flex; align-items: baseline; gap: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 500; letter-spacing: 0.04em;
+    color: var(--text-secondary); text-decoration: none;
+    text-transform: uppercase; transition: color 0.2s, background 0.2s;
+    padding: 8px 20px;
+    border-right: 1px solid var(--accent-secondary);
+    white-space: nowrap;
+    line-height: 1;
+  }
+  .nav-links li:first-child a { border-left: 1px solid var(--accent-secondary); }
+  .nav-links a:hover { color: var(--text-primary); background: rgba(255,255,255,0.03); }
+  .nav-links a.active { color: var(--text-primary); background: rgba(255,255,255,0.04); }
+  .nav-links a.active .nl-num { color: var(--text-primary); opacity: 1; }
+  .nav-links a em {
+    font-style: normal; color: var(--text-primary);
+    font-size: 0.68rem; letter-spacing: 0.12em; font-weight: 400;
+  }
+  .nl-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem; color: var(--status-label);
+    letter-spacing: 0.08em; opacity: 0.6;
+  }
+  .nav-links a:hover .nl-num { opacity: 1; }
+  .nav-right { display: flex; align-items: center; gap: 24px; }
+  .cart-link {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'Space Mono', monospace; font-size: 0.72rem;
+    color: var(--text-secondary); text-decoration: none;
+    letter-spacing: 0.1em; transition: color 0.2s;
+  }
+  .cart-link:hover { color: var(--text-primary); }
+  .cart-count {
+    width: 17px; height: 17px; background: var(--accent-primary);
+    color: var(--text-primary); font-size: 0.5rem;
+    display: flex; align-items: center; justify-content: center; font-weight: 700;
+  }
+  .nav-cta {
+    font-family: 'Space Mono', monospace; font-size: 0.7rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-primary); background: var(--accent-secondary);
+    border: 1px solid var(--accent-primary);
+    border-radius: 2px;
+    padding: 9px 20px; text-decoration: none; transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--accent-primary); }
+
+  /* MAIN LAYOUT */
+  .page {
+    position: fixed; inset: 0;
+    display: grid; grid-template-columns: 0.9fr 1.25fr;
+    align-items: center;
+    padding: 0 52px;
+    z-index: 1;
+  }
+
+  /* LEFT */
+  .left { display: flex; flex-direction: column; padding-top: 16px; }
+
+  .tag {
+    font-family: 'Space Mono', monospace; font-size: 0.68rem;
+    letter-spacing: 0.2em; color: var(--status-label); text-transform: uppercase;
+    margin-bottom: 10px; display: flex; align-items: center; gap: 10px;
+    opacity: 0; animation: fadeUp 0.7s ease 0.1s forwards;
+  }
+  .tag::before { content: ''; width: 28px; height: 1px; background: var(--status-label); }
+
+  .coords {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 7.5vw, 7.5rem);
+    line-height: 0.88; letter-spacing: 0.05em;
+    color: var(--text-primary); margin-bottom: 6px;
+    opacity: 0; animation: fadeUp 0.7s ease 0.2s forwards;
+  }
+  .hook {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.28s forwards;
+  }
+  .subtitle {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(0.9rem, 1.6vw, 1.5rem);
+    letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 8px;
+    opacity: 0; animation: fadeUp 0.7s ease 0.3s forwards;
+  }
+  .spec-ref {
+    font-family: 'Space Mono', monospace; font-size: 0.68rem;
+    color: var(--status-label); letter-spacing: 0.1em; margin-bottom: 20px;
+    opacity: 0; animation: fadeUp 0.7s ease 0.35s forwards;
+  }
+  .desc {
+    font-size: 0.95rem; color: var(--text-secondary); line-height: 1.85;
+    max-width: 360px; margin-bottom: 32px;
+    opacity: 0; animation: fadeUp 0.7s ease 0.4s forwards;
+  }
+  .ctas {
+    display: flex; align-items: center; gap: 14px;
+    opacity: 0; animation: fadeUp 0.7s ease 0.5s forwards;
+  }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-family: 'Space Mono', monospace; font-size: 0.72rem;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--text-primary); background: var(--accent-primary);
+    border: 1px solid var(--accent-primary);
+    border-radius: 2px;
+    padding: 13px 26px; text-decoration: none;
+    position: relative; overflow: hidden; transition: all 0.3s;
+  }
+  .btn-primary::before {
+    content: ''; position: absolute; inset: 0;
+    background: #6b6b6b;
+    transform: translateX(-100%); transition: transform 0.3s ease;
+  }
+  .btn-primary:hover::before { transform: translateX(0); }
+  .btn-primary span, .btn-primary svg { position: relative; z-index: 1; }
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'Space Mono', monospace; font-size: 0.7rem;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-secondary); border: 1px solid var(--accent-secondary);
+    border-radius: 2px;
+    padding: 12px 22px; text-decoration: none; transition: all 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--accent-primary); color: var(--text-primary); }
+
+  /* palette */
+  .palette {
+    display: flex; align-items: center; gap: 18px; margin-top: 30px;
+    opacity: 0; animation: fadeUp 0.7s ease 0.6s forwards;
+  }
+  .palette-label {
+    font-family: 'Space Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 0.15em; color: var(--text-secondary);
+    text-transform: uppercase; margin-right: 2px;
+  }
+  .swatch { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .swatch-dot { width: 26px; height: 26px; }
+  .swatch-name {
+    font-family: 'Space Mono', monospace; font-size: 0.56rem;
+    color: rgba(240,237,232,0.72); letter-spacing: 0.04em;
+    text-align: center; line-height: 1.4;
+  }
+  [data-theme="light"] .swatch-name {
+    color: rgba(10,10,10,0.75);
+  }
+
+  /* RIGHT BOARD */
+  .right {
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    opacity: 0; animation: fadeIn 1.1s ease 0.3s forwards;
+    perspective: var(--persp);
+    transform: translateX(0);
+  }
+
+  .board-wrap {
+    position: relative;
+    width: min(840px, 75vw); /* give the board more visual real estate */
+    min-height: min(640px, 52vw);
+    transform-style: preserve-3d;
+    filter: drop-shadow(0 32px 72px rgba(0,0,0,0.55));
+  }
+[data-theme="light"] .board-wrap {
+    filter: drop-shadow(0 18px 48px rgba(0,0,0,0.32));
+  }
+ 
+  .ann-top, .ann-board-label, .anns-right, .ann-bottom { display: none; }
+
+  .board {
+    width: 100%; aspect-ratio: 4/3;
+    background: transparent;
+    border: none;
+    border-radius: 10px; position: relative;
+    box-shadow: none;
+    overflow: visible;
+    transform-style: preserve-3d;
+    transform: perspective(var(--persp)) translateX(var(--tx)) rotateX(var(--rx)) rotateY(var(--ry)) rotateZ(var(--rz)) translateZ(var(--tz));
+  }
+  .board-inner {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transition: transform 0.9s ease;
+  }
+  .board.is-flipped .board-inner {
+    transform: rotateY(180deg);
+  }
+  .board::before {
+    content: '';
+    position: absolute;
+    inset: -70px;
+    background: radial-gradient(ellipse at center, rgba(201,168,76,0.18), rgba(0,0,0,0));
+    filter: blur(34px);
+    z-index: 0;
+    pointer-events: none;
+  }
+  .board::after {
+    display: none;
+  }
+  .board-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* show full image without cropping */
+    background: transparent; /* keep alpha so glow/shadow pass through */
+    z-index: 1;
+    backface-visibility: hidden;
+    filter: none;
+    cursor: zoom-in;
+  }
+  .board-image.board-back {
+    transform: rotateY(180deg);
+  }
+  .board-image.detail-zoom-br {
+    transform-origin: 100% 100%;
+    animation: detailZoomBR 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    object-fit: cover;
+    object-position: 100% 100%;
+  }
+  .board-image.detail-zoom-br-reverse {
+    transform-origin: 100% 100%;
+    animation: detailZoomBRReverse 580ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    object-fit: cover;
+    object-position: 100% 100%;
+  }
+  .board-detail-stack {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    display: none;
+    transform-origin: 100% 100%;
+    will-change: transform, opacity;
+    overflow: hidden;
+  }
+  .board-detail-stack.active {
+    display: block;
+  }
+  .board-detail-stack.zooming {
+    animation: detailZoomBR 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .board-detail-stack.reverse {
+    animation: detailZoomBRReverse 580ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .board-image.board-detail-base {
+    object-fit: contain;
+    object-position: 100% 100%;
+    filter:
+      drop-shadow(0 0 28px rgba(201,168,76,0.37))
+      drop-shadow(0 0 68px rgba(201,168,76,0.21))
+      saturate(1.08) contrast(1.05);
+  }
+  .board-image.board-detail-base.detail-closeup {
+    width: auto;
+    height: auto;
+    max-width: none;
+    max-height: none;
+    object-fit: none;
+    object-position: 100% 100%;
+    right: 0;
+    bottom: 0;
+    inset: auto 0 0 auto;
+    filter: none;
+  }
+  .board-logo-mark {
+    position: absolute; top: 16px; left: 18px;
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem;
+    letter-spacing: 0.3em; color: rgba(240,237,232,0.2);
+  }
+  .board-cheese { position: absolute; top: 10px; right: 98px; width: 82px; height: 72px; opacity: 0.75; }
+  .board-wells {
+    position: absolute; top: 8px; right: 8px;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 6px; background: rgba(0,0,0,0.32); padding: 9px; border: 1px solid rgba(255,255,255,0.08); border-radius: 2px;
+  }
+  .well {
+    width: 24px; height: 24px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.18); background: rgba(0,0,0,0.45);
+  }
+  .board-grooves {
+    position: absolute; bottom: 58px; left: 0; right: 0;
+    padding: 0 18px; display: flex; flex-direction: column; gap: 8px;
+  }
+  .groove { height: 3px; background: rgba(0,0,0,0.35); border-radius: 2px; }
+  .groove:nth-child(1) { width: 78%; }
+  .groove:nth-child(2) { width: 62%; }
+  .groove:nth-child(3) { width: 70%; }
+  .board-texture {
+    position: absolute; bottom: 7px; right: 7px;
+    width: 104px; height: 52px;
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 1px, transparent 1px, transparent 9px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 1px, transparent 1px, transparent 9px);
+    border: 1px solid rgba(255,255,255,0.14);
+  }
+
+  /* annotations right */
+  .anns-right {
+    position: absolute; top: 0; bottom: 0; right: -182px;
+    display: flex; flex-direction: column;
+    justify-content: space-between;
+    padding: 8% 0 28%; pointer-events: none;
+  }
+  .ann { display: flex; align-items: center; }
+  .ann-line { width: 32px; height: 1px; background: var(--status-label); opacity: 0.4; flex-shrink: 0; }
+  .ann-dot { width: 4px; height: 4px; background: var(--accent-primary); border-radius: 50%; margin-left: -2px; flex-shrink: 0; }
+  .ann-text {
+    font-family: 'Space Mono', monospace; font-size: 0.6rem;
+    color: var(--status-label); letter-spacing: 0.07em; line-height: 1.6;
+    padding-left: 7px; white-space: nowrap;
+  }
+  .ann-text span { display: block; color: rgba(240,237,232,0.24); }
+
+  .ann-bottom {
+    position: absolute; bottom: -52px; left: 32%;
+    font-family: 'Space Mono', monospace; font-size: 0.6rem;
+    color: var(--status-label); letter-spacing: 0.08em; line-height: 1.6;
+    text-align: center; white-space: nowrap;
+  }
+  .ann-bottom::before {
+    content: ''; display: block; width: 1px; height: 13px;
+    background: var(--status-label); opacity: 0.4; margin: 0 auto 4px;
+  }
+
+  /* filling instructions rail */
+  .ritual-stage {
+    width: 100%;
+    position: relative;
+    min-height: inherit;
+  }
+  .ritual-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 26px;
+    align-items: start;
+  }
+  .ritual-grid.single {
+    gap: 0;
+  }
+  .ritual-grid.multi {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 42px;
+  }
+  .ritual-grid.multi .ritual-board-shell {
+    margin-top: 8px;
+  }
+  .ritual-panel {
+    display: grid;
+    gap: 18px;
+    align-items: start;
+  }
+  .ritual-panel-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    color: var(--status-label);
+    text-transform: uppercase;
+  }
+  .ritual-panel-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent-primary), transparent);
+    opacity: 0.45;
+  }
+  .ritual-board-shell {
+    position: relative;
+    transform-origin: center center;
+    will-change: transform;
+    z-index: 1;
+  }
+  .ritual-board-shell.flip-zoom {
+    animation: flipZoomPulse 840ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .ritual-sequence {
+    position: absolute;
+    left: -320px;
+    top: 18px;
+    transform: translateZ(90px);
+    margin-top: 0;
+    z-index: 5;
+  }
+  .fill-steps {
+    display: grid;
+    gap: 14px;
+    transform: none;
+    width: 230px;
+    pointer-events: auto;
+  }
+  .ritual-panel {
+    position: relative;
+  }
+  .fill-steps-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    color: var(--status-label);
+    text-transform: uppercase;
+    padding-left: 6px;
+  }
+  .fill-step {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 12px 14px;
+    background: linear-gradient(160deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+    border: 1px solid var(--accent-secondary);
+    border-radius: 12px;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.35);
+    backdrop-filter: blur(8px);
+    pointer-events: auto;
+  }
+  .fill-step.active {
+    border-color: var(--lux-gold);
+    box-shadow: 0 14px 34px rgba(0,0,0,0.46), 0 0 18px rgba(201,168,76,0.34);
+  }
+
+  /* readout/controls removed */
+  .fill-step-meta { display: flex; flex-direction: column; gap: 4px; }
+  .step-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+    color: var(--lux-gold);
+  }
+  .step-text {
+    font-size: 0.84rem;
+    color: var(--text-primary);
+    line-height: 1.35;
+    letter-spacing: 0.04em;
+  }
+  .step-text span {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+  }
+
+  .discover-hint {
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0.92;
+  }
+  .discover-hint-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--status-label);
+    white-space: nowrap;
+  }
+  .discover-arrow {
+    width: 16px;
+    height: 16px;
+    color: var(--lux-gold);
+    animation: hintBounce 1.8s ease-in-out infinite;
+  }
+  .discover-mobile { display: none; }
+  @media (max-width: 840px) {
+    .discover-desktop { display: none; }
+    .discover-mobile { display: inline; }
+    .discover-hint {
+      top: 2px;
+      transform: translate(-50%, -100%);
+    }
+  }
+  @media (min-width: 841px) {
+    .discover-desktop { display: inline; }
+    .discover-mobile { display: none; }
+  }
+
+  .image-viewer {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(3, 3, 3, 0.92);
+    backdrop-filter: blur(12px);
+    padding: 24px;
+  }
+  .image-viewer.open {
+    display: flex;
+  }
+  .image-viewer-backdrop {
+    position: absolute;
+    inset: 0;
+    cursor: zoom-out;
+  }
+  .image-viewer-panel {
+    position: relative;
+    z-index: 1;
+    width: min(96vw, 1600px);
+    height: min(92vh, 1200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .image-viewer-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(0,0,0,0.2);
+  }
+  .image-viewer-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(0,0,0,0.5);
+    color: var(--text-primary);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 2;
+  }
+  .image-viewer-close:hover {
+    background: rgba(255,255,255,0.08);
+  }
+
+  /* action bar */
+  .actionbar {
+    position: fixed; bottom: 14px; left: 34px; right: 34px; z-index: 50;
+    height: 110px; min-height: 110px;
+    background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    border: 1px solid var(--accent-secondary);
+    border-radius: 24px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 20px 36px rgba(0,0,0,0.45);
+    display: flex; align-items: center;
+    padding: 0 0 0 24px;
+    gap: 0;
+    overflow: visible;
+  }
+
+  .ab-coord {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem; letter-spacing: 0.16em;
+    color: var(--status-label); text-transform: uppercase;
+    padding-right: 32px;
+    border-right: 1px solid var(--accent-secondary);
+    margin-right: 0;
+    white-space: nowrap;
+  }
+
+  .ab-btn {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Space Mono', monospace; font-size: 0.66rem;
+    letter-spacing: 0.11em; text-transform: uppercase;
+    color: var(--text-secondary); background: none; border: none;
+    padding: 0 20px; height: 100%;
+    min-width: 126px;
+    justify-content: center;
+    border-right: 1px solid var(--accent-secondary);
+    text-decoration: none;
+    transition: background 0.18s;
+    white-space: nowrap; font-weight: 700;
+    position: relative;
+  }
+  .ab-btn:hover { background: rgba(255,255,255,0.04); color: var(--text-primary); }
+  .ab-btn.active {
+    background: var(--accent-secondary); color: var(--text-primary);
+  }
+  .ab-btn svg { flex-shrink: 0; opacity: 0.72; }
+  .ab-btn.active svg { opacity: 1; }
+  .ab-iconbox {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.08);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, var(--bg-secondary), var(--bg-primary));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    transition: all 0.2s ease;
+  }
+  .ab-label {
+    display: inline-block;
+  }
+  .ab-btn.active .ab-iconbox {
+    border: 2px solid var(--lux-gold);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 0 0 1px rgba(201,168,76,0.25), 0 0 22px rgba(201,168,76,0.18);
+  }
+  .ab-btn.ab-cta {
+    color: var(--text-primary);
+    background: linear-gradient(180deg, rgba(201,168,76,0.16) 0%, rgba(201,168,76,0.08) 100%);
+  }
+  .ab-btn.ab-cta .ab-iconbox {
+    border: 2px solid var(--lux-gold-bright);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.16), 0 0 0 1px rgba(201,168,76,0.3), 0 0 26px rgba(201,168,76,0.22);
+  }
+  .ab-btn:hover .ab-iconbox {
+    border-color: rgba(255,255,255,0.18);
+  }
+
+  .ab-spacer { flex: 1; }
+
+  .ab-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem; letter-spacing: 0.08em;
+    color: var(--text-primary);
+    padding-left: 28px;
+    border-left: 1px solid var(--accent-secondary);
+    white-space: nowrap;
+  }
+  .ab-price-label {
+    font-family: 'Space Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 0.12em; color: var(--status-label);
+    text-transform: uppercase; display: block; margin-bottom: 2px;
+  }
+  .ab-discount-note {
+    display: block;
+    font-family: 'Space Mono', monospace; font-size: 0.625rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--lux-gold); margin-top: 4px;
+    opacity: 0.85;
+  }
+
+  .micro-serial {
+    position: fixed;
+    right: 52px;
+    bottom: 134px;
+    z-index: 40;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.2em;
+    color: rgba(240,237,232,0.18);
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 980px) {
+    :root {
+      --detail-zoom-scale: 2.45;
+      --detail-zoom-x: -2%;
+      --detail-zoom-y: -2%;
+      --detail-zoom-rotx: 8deg;
+      --detail-zoom-roty: -12deg;
+    }
+    html, body { height: auto; overflow-y: auto; }
+    nav {
+      position: relative;
+      padding: 12px 14px 10px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .nav-logo {
+      font-size: 1.45rem;
+      letter-spacing: 0.28em;
+    }
+    .nav-collections {
+      width: 100%;
+      gap: 8px;
+    }
+    .nav-collections-label {
+      display: none;
+    }
+    .nav-links {
+      width: 100%;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .nav-links li:first-child a {
+      border-left: 0;
+    }
+    .nav-links a {
+      padding: 7px 10px;
+      border: 1px solid var(--accent-secondary);
+      border-radius: 999px;
+      font-size: 0.72rem;
+    }
+    .nav-right {
+      width: 100%;
+      justify-content: flex-end;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .page {
+      position: relative;
+      grid-template-columns: 1fr;
+      gap: 30px;
+      padding: 14px 20px 120px;
+      align-items: start;
+    }
+    .board-wrap {
+      width: min(520px, 85vw); /* ~7% downscale from desktop size */
+      min-height: auto;
+      transform: scale(0.93);
+      transform-origin: center;
+      margin-right: 8px; /* keep a little breathing room on the right */
+    }
+    .anns-right { right: -140px; }
+    .actionbar {
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      border-radius: 14px;
+      padding: 8px 10px;
+      height: auto;
+      min-height: 52px;
+      flex-wrap: wrap;
+      gap: 6px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 12px 24px rgba(0,0,0,0.35);
+    }
+    .ab-coord {
+      border-right: none;
+      padding-right: 0;
+      white-space: normal;
+      line-height: 1.1;
+      flex: 1 1 auto;
+      font-size: 0.56rem;
+      letter-spacing: 0.1em;
+    }
+    .ab-products {
+      order: 3;
+      flex: 1 1 100%;
+      width: 100%;
+      height: 58px;
+      border-left: none;
+      border-right: none;
+      border-top: 1px solid var(--accent-secondary);
+      margin-top: 2px;
+      overflow-x: auto;
+    }
+    .ab-product {
+      min-width: 104px;
+    }
+    .ab-label { display: none; }
+    .ab-price {
+      margin-left: auto;
+      padding-left: 0;
+      border-left: none;
+      text-align: right;
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+    .ab-price-label { display: none; }
+    .ab-btn {
+      min-width: 98px;
+      padding: 0 10px;
+      font-size: 0.58rem;
+    }
+    .ab-iconbox {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+    }
+    .micro-serial { right: 18px; bottom: 84px; }
+    .fill-steps {
+      width: 100%;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      margin-top: 18px;
+    }
+    .fill-step { height: 100%; }
+    .ritual-grid.multi {
+      grid-template-columns: 1fr;
+    }
+    .ritual-sequence {
+      position: static;
+      left: auto;
+      top: auto;
+      transform: none;
+      margin-top: 18px;
+    }
+    .ritual-stage {
+      min-height: 0;
+    }
+    .fill-steps {
+      width: 100%;
+    }
+    .ritual-stage {
+      display: flex;
+      flex-direction: column;
+    }
+    .ritual-grid {
+      order: 1;
+    }
+    .ritual-sequence {
+      order: 2;
+      position: static;
+      left: auto;
+      top: auto;
+      transform: none;
+      margin-top: 16px;
+      width: 100%;
+    }
+  }
+
+  /* Rituals nav li — holds the dropdown */
+  .rituals-nav-li {
+    position: relative;
+  }
+
+  /* Rituals sub-nav — drops below the RITUALS tab, centered under it */
+  .rituals-subnav {
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: row;
+    gap: 6px;
+    white-space: nowrap;
+    z-index: 200;
+    padding: 10px 12px;
+    background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    border: 1px solid var(--accent-secondary);
+    border-radius: 10px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.45);
+  }
+  .rituals-subnav::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px; height: 8px;
+    background: var(--bg-secondary);
+    border-left: 1px solid var(--accent-secondary);
+    border-top: 1px solid var(--accent-secondary);
+    rotate: 45deg;
+  }
+  .rituals-subnav.visible {
+    display: flex;
+  }
+  .ritual-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    background: transparent;
+    border: 1px solid var(--accent-secondary);
+    border-radius: 3px;
+    padding: 7px 13px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+  }
+  .ritual-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: var(--lux-gold);
+    transform: scaleX(0);
+    transition: transform 0.2s ease;
+  }
+  .ritual-btn:hover {
+    color: var(--text-primary);
+    border-color: var(--accent-primary);
+    background: rgba(255,255,255,0.03);
+  }
+  .ritual-btn.active {
+    color: var(--text-primary);
+    border-color: var(--lux-gold);
+    background: rgba(201,168,76,0.07);
+    box-shadow: 0 0 14px rgba(201,168,76,0.14);
+  }
+  .ritual-btn.active::after {
+    transform: scaleX(1);
+  }
+
+  .ab-products {
+    display: flex;
+    align-items: stretch;
+    flex: 1;
+    height: 100%;
+    overflow: visible;
+    border-left: 1px solid var(--accent-secondary);
+    border-right: 1px solid var(--accent-secondary);
+  }
+  .ab-product {
+    flex: 1;
+    height: 100%;
+    position: relative;
+    cursor: pointer;
+    overflow: visible;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    transition: flex 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .ab-product:last-child { border-right: none; }
+
+  /* Clip just the in-bar portion */
+  .ab-product-clip {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-right: inherit;
+  }
+
+  /* Full-bleed — cover ALWAYS, zero black borders in any state */
+  .ab-product-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transform: scale(1);
+    transition: transform 0.45s ease;
+  }
+  .ab-product:hover .ab-product-bg {
+    transform: scale(1.1);
+  }
+
+  /* One-shot click pulse — scale only, cover stays intact */
+  @keyframes clickZoom {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.18); }
+    100% { transform: scale(1); }
+  }
+  .ab-product-bg.click-flash {
+    animation: clickZoom 0.5s ease-out forwards;
+  }
+
+  /* Identical overlay in ALL states */
+  .ab-product-clip::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0,0,0,0.78) 0%,
+      rgba(0,0,0,0.35) 45%,
+      rgba(0,0,0,0.10) 100%
+    );
+    z-index: 1;
+  }
+
+  /* Gold top-edge line — only persistent active indicator */
+  .ab-product.active::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--lux-gold);
+    box-shadow: 0 0 12px rgba(201,168,76,0.6);
+    z-index: 3;
+  }
+
+  /* Text overlay — bottom left, inside clip */
+  .ab-product-info {
+    position: absolute;
+    bottom: 10px;
+    left: 12px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    pointer-events: none;
+  }
+
+  /* ── Hover popup — floats upward out of bar ─────────────────────────── */
+  .ab-product-popup {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(12px) scale(0.96);
+    width: clamp(200px, 24vw, 340px);
+    border-radius: 14px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 0.28s ease,
+      transform 0.32s cubic-bezier(0.34, 1.3, 0.64, 1);
+    z-index: 200;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.08);
+    background: var(--bg-secondary);
+  }
+  .ab-product-popup-img {
+    width: 100%;
+    /* Let image dictate natural height — no forced aspect ratio */
+    padding-bottom: 0;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: var(--bg-secondary);
+    /* Render at native ratio by using a tall enough container */
+    min-height: 160px;
+    max-height: 300px;
+    aspect-ratio: auto;
+    /* Use actual img tag for natural sizing */
+    display: block;
+    position: relative;
+  }
+  /* Use an actual img instead of bg for correct natural ratio */
+  .ab-product-popup-img img {
+    width: 100%;
+    height: 100%;
+    max-height: 280px;
+    object-fit: contain;
+    display: block;
+    background: var(--bg-secondary);
+  }
+  .ab-product-popup-label {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 28px 14px 12px;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: #fff;
+    text-transform: uppercase;
+  }
+  .ab-product-popup-label span {
+    display: block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.52rem;
+    letter-spacing: 0.18em;
+    color: var(--lux-gold);
+    margin-bottom: 3px;
+  }
+  /* Arrow pointer */
+  .ab-product-popup::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 10px; height: 10px;
+    background: var(--bg-secondary);
+    border-right: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-radius: 2px;
+  }
+
+  /* Show popup on hover */
+  .ab-product:hover .ab-product-popup {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+
+  /* Full-bleed background image */
+  .ab-product-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: background-size 0.42s cubic-bezier(0.4,0,0.2,1), transform 0.42s cubic-bezier(0.4,0,0.2,1);
+  }
+  
+  /* When hovered (expanded) or active — keep cover to prevent black edges */
+  .ab-products:hover .ab-product:hover .ab-product-bg,
+  .ab-product.active .ab-product-bg {
+    background-size: cover;
+    transform: none;
+  }
+
+  /* Dark gradient overlay — stronger at bottom for text */
+  .ab-product::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0,0,0,0.82) 0%,
+      rgba(0,0,0,0.38) 45%,
+      rgba(0,0,0,0.12) 100%
+    );
+    transition: background 0.22s ease;
+    z-index: 1;
+  }
+  .ab-product.active::after {
+    background: linear-gradient(
+      to top,
+      rgba(0,0,0,0.72) 0%,
+      rgba(0,0,0,0.18) 50%,
+      rgba(201,168,76,0.08) 100%
+    );
+  }
+  .ab-product:hover::after {
+    background: linear-gradient(
+      to top,
+      rgba(0,0,0,0.78) 0%,
+      rgba(0,0,0,0.28) 50%,
+      rgba(0,0,0,0.06) 100%
+    );
+  }
+
+  /* Gold top-edge accent on active */
+  .ab-product.active::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--lux-gold);
+    box-shadow: 0 0 12px rgba(201,168,76,0.6);
+    z-index: 3;
+  }
+
+  /* Text overlay — bottom left */
+  .ab-product-info {
+    position: absolute;
+    bottom: 10px;
+    left: 12px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .ab-product-collection {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.52rem;
+    letter-spacing: 0.16em;
+    color: rgba(240,237,232,0.5);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .ab-product.active .ab-product-collection {
+    color: var(--lux-gold);
+  }
+  .ab-product-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: rgba(240,237,232,0.9);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .ab-product.active .ab-product-label {
+    color: #fff;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes detailZoomBR {
+    from {
+      transform: perspective(1200px) scale(1) translate(0, 0) rotateX(0deg) rotateY(0deg);
+    }
+    to {
+      transform: perspective(1200px) scale(var(--detail-zoom-scale)) translate3d(var(--detail-zoom-x), var(--detail-zoom-y), 0) rotateX(var(--detail-zoom-rotx)) rotateY(var(--detail-zoom-roty));
+    }
+  }
+  @keyframes detailZoomBRReverse {
+    from {
+      transform: perspective(1200px) scale(var(--detail-zoom-scale)) translate3d(var(--detail-zoom-x), var(--detail-zoom-y), 0) rotateX(var(--detail-zoom-rotx)) rotateY(var(--detail-zoom-roty));
+    }
+    to {
+      transform: perspective(1200px) scale(1) translate(0, 0) rotateX(0deg) rotateY(0deg);
+    }
+  }
+  @keyframes flipZoomPulse {
+    0% { transform: scale(1); }
+    38% { transform: scale(1.55); }
+    100% { transform: scale(1); }
+  }
+  @keyframes hintBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(4px); }
+  }
+
+  /* ── ORDER MODAL ──────────────────────────────────────────────────────────── */
+  .order-modal {
+    position: fixed; inset: 0; z-index: 1000;
+    display: none; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .order-modal.open { display: flex; }
+  .order-modal-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.82);
+    backdrop-filter: blur(14px);
+    cursor: pointer;
+  }
+  .order-modal-panel {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 860px;
+    display: flex; flex-direction: row;
+    background: linear-gradient(160deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    border: 1px solid var(--accent-secondary);
+    border-radius: 20px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.06);
+    overflow: hidden;
+  }
+  .om-form-col {
+    flex: 0 0 420px;
+    display: flex; flex-direction: column;
+    overflow-y: auto; max-height: 90vh;
+  }
+  .om-preview-col {
+    flex: 1;
+    position: relative;
+    min-height: 340px;
+    background: var(--bg-secondary);
+    border-left: 1px solid var(--accent-secondary);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    overflow: hidden; gap: 18px; padding: 24px 16px;
+  }
+  .om-preview-col-bg {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: center;
+    filter: blur(28px) saturate(0.6);
+    opacity: 0.18;
+    transition: background-image 0.4s ease;
+  }
+  .om-preview-block {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column; align-items: center; gap: 7px;
+    width: 100%;
+  }
+  .om-preview-side-label {
+    font-family: 'Space Mono', monospace; font-size: 0.54rem;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--status-label); display: flex; align-items: center; gap: 7px;
+  }
+  .om-preview-side-label::before,
+  .om-preview-side-label::after {
+    content: ''; flex: 1; height: 1px;
+    background: var(--accent-primary); opacity: 0.4; width: 28px;
+  }
+  .om-preview-img {
+    position: relative; z-index: 1;
+    width: 97.75%; max-width: 345px; /* 85%*1.15 = 97.75%, 300px*1.15 = 345px */
+    object-fit: contain;
+    filter: drop-shadow(0 10px 32px rgba(0,0,0,0.5));
+    transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.34,1.3,0.64,1);
+    transform: scale(1);
+  }
+  .om-preview-img.switching {
+    opacity: 0; transform: scale(0.94);
+  }
+  .om-preview-label {
+    position: relative; z-index: 1;
+    margin-top: 4px; text-align: center;
+  }
+  .om-preview-label-name {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem;
+    letter-spacing: 0.1em; color: var(--text-primary);
+  }
+  .om-preview-label-sub {
+    font-family: 'Space Mono', monospace; font-size: 0.52rem;
+    letter-spacing: 0.18em; color: var(--lux-gold);
+    text-transform: uppercase; margin-top: 3px;
+  }
+  /* divider between front and back */
+  .om-preview-divider {
+    width: 60%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+    opacity: 0.35; position: relative; z-index: 1;
+  }
+  /* Custom brief textarea inside product card */
+  .om-custom-brief {
+    display: none;
+    width: 100%; margin-top: 10px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--accent-secondary);
+    border-radius: 8px; padding: 10px 12px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.8rem;
+    color: var(--text-primary); outline: none; resize: none;
+    line-height: 1.6; min-height: 72px;
+    transition: border-color 0.18s;
+  }
+  .om-custom-brief::placeholder { color: var(--text-secondary); opacity: 0.55; font-size: 0.75rem; }
+  .om-custom-brief:focus { border-color: var(--lux-gold); }
+  .om-product.active .om-custom-brief { display: block; }
+
+  /* Roots attach widget — only visible when Roots is active */
+  .om-roots-attach {
+    display: none;
+    flex-direction: column; gap: 6px;
+    margin-top: 10px; width: 100%;
+  }
+  .om-product[data-product="Roots Board"].active .om-roots-attach { display: flex; }
+  .om-attach-label {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: 'Space Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.13em; text-transform: uppercase;
+    color: var(--text-secondary);
+    background: rgba(255,255,255,0.03);
+    border: 1px dashed var(--accent-primary);
+    border-radius: 8px; padding: 9px 13px;
+    cursor: pointer; transition: all 0.18s;
+    width: 100%;
+  }
+  .om-attach-label:hover { border-color: var(--lux-gold); color: var(--text-primary); background: rgba(201,168,76,0.05); }
+  .om-file-input { display: none; }
+  .om-file-chosen {
+    font-family: 'Space Mono', monospace; font-size: 0.56rem;
+    letter-spacing: 0.1em; color: var(--lux-gold);
+    padding-left: 4px; opacity: 0.8;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  /* Hide preview col on small screens */
+  @media (max-width: 720px) {
+    .order-modal-panel { flex-direction: column; max-width: 480px; }
+    .om-form-col { flex: none; }
+    .om-preview-col { display: none; }
+  }
+  .om-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 24px 18px;
+    border-bottom: 1px solid var(--accent-secondary);
+  }
+  .om-header-left { display: flex; flex-direction: column; gap: 3px; }
+  .om-label {
+    font-family: 'Space Mono', monospace; font-size: 0.58rem;
+    letter-spacing: 0.22em; color: var(--lux-gold); text-transform: uppercase;
+  }
+  .om-title {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem;
+    letter-spacing: 0.08em; color: var(--text-primary);
+  }
+  .om-close {
+    width: 36px; height: 36px; border-radius: 10px;
+    border: 1px solid var(--accent-secondary);
+    background: none; color: var(--text-secondary);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.18s;
+  }
+  .om-close:hover { border-color: var(--accent-primary); color: var(--text-primary); }
+
+  .om-step { padding: 22px 24px 24px; }
+  .om-section-label {
+    font-family: 'Space Mono', monospace; font-size: 0.58rem;
+    letter-spacing: 0.2em; color: var(--status-label);
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+
+  /* Products */
+  .om-products { display: flex; flex-direction: column; gap: 8px; }
+  .om-product {
+    display: flex; align-items: center; gap: 14px;
+    padding: 11px 14px;
+    border: 1px solid var(--accent-secondary);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.18s;
+    background: rgba(255,255,255,0.01);
+  }
+  .om-product:hover { border-color: var(--accent-primary); background: rgba(255,255,255,0.03); }
+  .om-product.active {
+    border-color: var(--lux-gold);
+    background: rgba(201,168,76,0.06);
+    box-shadow: 0 0 18px rgba(201,168,76,0.12);
+  }
+  .om-product-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    border: 1px solid var(--accent-primary);
+    flex-shrink: 0; transition: all 0.18s;
+  }
+  .om-product.active .om-product-dot {
+    background: var(--lux-gold); border-color: var(--lux-gold);
+    box-shadow: 0 0 8px rgba(201,168,76,0.5);
+  }
+  .om-product-info { display: flex; flex-direction: column; gap: 2px; }
+  .om-product-name {
+    font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+    font-weight: 600; letter-spacing: 0.04em; color: var(--text-primary);
+  }
+  .om-product-sub {
+    font-family: 'Space Mono', monospace; font-size: 0.54rem;
+    letter-spacing: 0.12em; color: var(--status-label);
+  }
+
+  /* Quantity */
+  .om-qty-row {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 12px;
+  }
+  .om-qty-btn {
+    width: 36px; height: 36px; border-radius: 10px;
+    border: 1px solid var(--accent-secondary);
+    background: none; color: var(--text-primary);
+    font-size: 1.2rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.18s;
+  }
+  .om-qty-btn:hover { border-color: var(--accent-primary); background: rgba(255,255,255,0.04); }
+  .om-qty-val {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem;
+    letter-spacing: 0.1em; color: var(--text-primary);
+    min-width: 28px; text-align: center;
+  }
+  .om-qty-summary {
+    font-family: 'Space Mono', monospace; font-size: 0.68rem;
+    letter-spacing: 0.1em; color: var(--text-secondary);
+    margin-left: 4px;
+  }
+  .om-pricing-note {
+    display: flex; align-items: center; gap: 7px;
+    font-family: 'Space Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.1em; color: var(--lux-gold);
+    padding: 9px 12px;
+    background: rgba(201,168,76,0.06);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+
+  .om-next-btn {
+    width: 100%; padding: 13px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    font-family: 'Space Mono', monospace; font-size: 0.72rem;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--text-primary);
+    background: linear-gradient(180deg, rgba(201,168,76,0.18) 0%, rgba(201,168,76,0.08) 100%);
+    border: 1px solid var(--lux-gold);
+    border-radius: 10px; cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 0 22px rgba(201,168,76,0.14);
+  }
+  .om-next-btn:hover {
+    background: linear-gradient(180deg, rgba(201,168,76,0.28) 0%, rgba(201,168,76,0.14) 100%);
+    box-shadow: 0 0 32px rgba(201,168,76,0.22);
+  }
+
+  /* Step 2 */
+  .om-fields { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+  .om-field { display: flex; flex-direction: column; gap: 5px; }
+  .om-field-label {
+    font-family: 'Space Mono', monospace; font-size: 0.58rem;
+    letter-spacing: 0.16em; color: var(--status-label); text-transform: uppercase;
+  }
+  .om-input {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--accent-secondary);
+    border-radius: 8px; padding: 10px 14px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+    color: var(--text-primary); outline: none;
+    transition: border-color 0.18s;
+  }
+  .om-input::placeholder { color: var(--text-secondary); opacity: 0.5; }
+  .om-input:focus { border-color: var(--accent-primary); }
+
+  .om-order-summary {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--accent-secondary);
+    border-radius: 10px; padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 8px;
+    margin-bottom: 20px;
+  }
+  .om-summary-row {
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'Space Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 0.1em; color: var(--text-secondary);
+  }
+  .om-summary-total {
+    padding-top: 8px;
+    border-top: 1px solid var(--accent-secondary);
+    color: var(--text-primary); font-size: 0.72rem;
+  }
+  .om-summary-total span:last-child { color: var(--lux-gold); }
+
+  .om-step2-btns { display: flex; gap: 10px; }
+  .om-back-btn {
+    padding: 13px 18px;
+    font-family: 'Space Mono', monospace; font-size: 0.66rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-secondary);
+    background: none; border: 1px solid var(--accent-secondary);
+    border-radius: 10px; cursor: pointer; transition: all 0.18s;
+    white-space: nowrap;
+  }
+  .om-back-btn:hover { border-color: var(--accent-primary); color: var(--text-primary); }
+  .om-checkout-btn {
+    flex: 1; padding: 13px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    font-family: 'Space Mono', monospace; font-size: 0.72rem;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--text-primary);
+    background: linear-gradient(180deg, rgba(201,168,76,0.18) 0%, rgba(201,168,76,0.08) 100%);
+    border: 1px solid var(--lux-gold);
+    border-radius: 10px; cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 0 22px rgba(201,168,76,0.14);
+  }
+  .om-checkout-btn:hover {
+    background: linear-gradient(180deg, rgba(201,168,76,0.28) 0%, rgba(201,168,76,0.08) 100%);
+    box-shadow: 0 0 32px rgba(201,168,76,0.22);
+  }
+
+  /* WhatsApp step */
+  .om-whatsapp-note {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 12px 14px;
+    background: rgba(37,211,102,0.06);
+    border: 1px solid rgba(37,211,102,0.2);
+    border-radius: 10px; margin-bottom: 20px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+    color: var(--text-secondary); line-height: 1.5;
+  }
+  .om-whatsapp-note svg { flex-shrink: 0; margin-top: 2px; color: #25d366; }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="iso-wm">ISO</div>
+
+<img class="cube-bg" src="assets/cube-bg-placeholder.png" alt="" onerror="this.style.display='none'">
+
+<img class="champagne" src="assets/champagne-placeholder.png" alt="" onerror="this.style.display='none'">
+
+<nav>
+  <a href="#" class="nav-logo">ISO<span class="nav-logo-mark"><img class="logo-dark" src="assets/logo_iso_white.png" alt=""><img class="logo-light" src="assets/logo_iso_black.png" alt=""></span></a>
+  <div class="nav-collections">
+    <div class="nav-collections-label">Collections</div>
+    <ul class="nav-links">
+      <li class="rituals-nav-li">
+        <a href="#" class="active" data-coords="ISO RITUALS" data-subtitle="ISO RITUALS" data-tag="" data-spec="" data-desc="Two boards. Two rituals. Engineered for the table that takes presentation seriously." data-image="assets/step-33.png" data-section="rituals">
+          <span class="nl-num">01</span>
+          RITUALS
+        </a>
+        <div class="rituals-subnav visible" id="rituals-subnav">
+          <button class="ritual-btn active" data-board="cheese">ISO-CHEESEPAIRING-RITUALS</button>
+          <button class="ritual-btn" data-board="dinner">ISO-DINNER-RITUALS</button>
+        </div>
+      </li>
+      <li><a href="#" data-coords="CHEAT SHEET" data-subtitle="ISO-CHEATSHEET-BOARD" data-tag="" data-spec="" data-desc="Temperatures, dicing guides, and flavor logic flows. Engraved directly into the wood. A high-fidelity information system for the kitchen. The only technical reference a home chef will ever need." data-image="assets/cheatsheet-step-2.png" data-section="cheatsheet">
+        <span class="nl-num">02</span>
+        CHEATSHEET
+      </a></li>
+      <li><a href="#" data-coords="ISO ROOTS" data-subtitle="ISO-ROOTS-BOARD" data-tag="" data-spec="" data-desc="A handwritten recipe, letter, or signature — etched into hardwood. A permanent piece from someone special." data-image="assets/roots-step-2.png" data-section="roots">
+        <span class="nl-num">03</span>
+        ROOTS
+      </a></li>
+      <li><a href="#" data-coords="ISO COMMISSION" data-subtitle="Custom Commission" data-tag="" data-spec="" data-desc="Bespoke boards for corporate gifts, events, and personal orders. Your mark, engraved. Serialized for permanence." data-image="assets/custom-step-2.png" data-section="custom">
+        <span class="nl-num">04</span>
+        COMMISSION
+      </a></li>
+    </ul>
+  </div>
+  <div class="nav-right">
+    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+      <span class="moon">🌙</span>
+      <span class="sun" style="display:none">☀️</span>
+    </button>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="left">
+    <div class="tag" id="hero-tag"></div>
+    <div class="coords" id="hero-coords">ISO<br>RITUALS</div>
+    <div class="hook">Stop serving. Start Curating.</div>
+    <div class="subtitle" id="hero-subtitle">ISO-CHEESEPAIRING-RITUALS</div>
+    <div class="spec-ref" id="hero-spec"></div>
+    <div class="desc" id="hero-desc">Dark walnut. Etched channels. Built for cheese, charcuterie, and the moments around them.</div>
+    <div class="ctas">
+      <a href="#" class="btn-primary" id="hero-order-btn">
+        <span>ORDER NOW</span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+    <div class="palette">
+      <div class="palette-label">MATERIALS</div>
+      <div class="swatch">
+        <div class="swatch-dot" style="background:#0a0a0a;border:1px solid #2a2a2a;"></div>
+        <div class="swatch-name">Black Etched</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-dot" style="background:linear-gradient(135deg,#3b1f0e,#5c2e12);border:1px solid #7a3d18;"></div>
+        <div class="swatch-name">Dark Walnut</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-dot" style="background:linear-gradient(135deg,#555,#2f2f2f);"></div>
+        <div class="swatch-name">Luxurious satin finish</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="board-wrap">
+
+      <div class="ann-top">
+       <br>
+        <span style="color:rgba(240,237,232,0.3)">[lmx: 17, 19]</span>
+      </div>
+      <div class="ann-board-label">
+        [ISO BOARD]<br>
+        <span style="color:rgba(240,237,232,0.3)">[lmx: 1K, 19]</span>
+      </div>
+
+      <div class="discover-hint" aria-hidden="true">
+        <span class="discover-hint-text discover-desktop">click to explore</span>
+        <span class="discover-hint-text discover-mobile">tap to explore</span>
+        <svg class="discover-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 5v12"></path>
+          <path d="M6 13l6 6 6-6"></path>
+        </svg>
+      </div>
+
+      <div class="ritual-stage" id="ritual-stage"></div>
+
+    </div>
+  </div>
+</div>
+
+<div class="actionbar">
+  <div class="ab-coord" id="ab-coord">Currently curated:</div>
+
+  <div class="ab-products">
+
+    <div class="ab-product active" data-product="cheese" data-section="rituals" data-board="cheese">
+      <div class="ab-product-clip">
+        <div class="ab-product-bg" style="background-image:url('assets/step-33.png')"></div>
+      </div>
+      <div class="ab-product-info">
+        <div class="ab-product-collection">01 RITUALS</div>
+        <div class="ab-product-label">Cheese Pairing</div>
+      </div>
+      <div class="ab-product-popup">
+        <div class="ab-product-popup-img"><img src="assets/step-33.png" alt="Cheese Pairing"></div>
+        <div class="ab-product-popup-label"><span>01 RITUALS</span>Cheese Pairing</div>
+      </div>
+    </div>
+
+    <div class="ab-product" data-product="dinner" data-section="rituals" data-board="dinner">
+      <div class="ab-product-clip">
+        <div class="ab-product-bg" style="background-image:url('assets/steak-step-2.png')"></div>
+      </div>
+      <div class="ab-product-info">
+        <div class="ab-product-collection">01 RITUALS</div>
+        <div class="ab-product-label">Dinner Rituals</div>
+      </div>
+      <div class="ab-product-popup">
+        <div class="ab-product-popup-img"><img src="assets/steak-step-2.png" alt="Dinner Rituals"></div>
+        <div class="ab-product-popup-label"><span>01 RITUALS</span>Dinner Rituals</div>
+      </div>
+    </div>
+
+    <div class="ab-product" data-product="cheatsheet" data-section="cheatsheet">
+      <div class="ab-product-clip">
+        <div class="ab-product-bg" style="background-image:url('assets/cheatsheet-step-2.png')"></div>
+      </div>
+      <div class="ab-product-info">
+        <div class="ab-product-collection">02 CHEATSHEET</div>
+        <div class="ab-product-label">Cheatsheet Board</div>
+      </div>
+      <div class="ab-product-popup">
+        <div class="ab-product-popup-img"><img src="assets/cheatsheet-step-2.png" alt="Cheatsheet"></div>
+        <div class="ab-product-popup-label"><span>02 CHEATSHEET</span>Cheatsheet Board</div>
+      </div>
+    </div>
+
+    <div class="ab-product" data-product="roots" data-section="roots">
+      <div class="ab-product-clip">
+        <div class="ab-product-bg" style="background-image:url('assets/roots-step-2.png')"></div>
+      </div>
+      <div class="ab-product-info">
+        <div class="ab-product-collection">03 ROOTS</div>
+        <div class="ab-product-label">ROOTS BOARD</div>
+      </div>
+      <div class="ab-product-popup">
+        <div class="ab-product-popup-img"><img src="assets/roots-step-2.png" alt="Roots"></div>
+        <div class="ab-product-popup-label"><span>03 ROOTS</span>ROOTS BOARD</div>
+      </div>
+    </div>
+
+    <div class="ab-product" data-product="custom" data-section="custom">
+      <div class="ab-product-clip">
+        <div class="ab-product-bg" style="background-image:url('assets/custom-step-2.png')"></div>
+      </div>
+      <div class="ab-product-info">
+        <div class="ab-product-collection">04 CUSTOM</div>
+        <div class="ab-product-label">COMMISSION</div>
+      </div>
+      <div class="ab-product-popup">
+        <div class="ab-product-popup-img"><img src="assets/custom-step-2.png" alt="Custom"></div>
+        <div class="ab-product-popup-label"><span>04 COMMISSION</span>COMMISSION</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="ab-price">
+    <span class="ab-price-label">PRICE</span>
+    $174.00
+    <span class="ab-discount-note">10% off on 2+ orders</span>
+  </div>
+  <a href="#" class="ab-btn ab-cta" id="add-to-cart" style="border-left:1px solid var(--accent-secondary); border-right:none; padding: 0 26px;">
+    <span class="ab-iconbox">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </span>
+    <span class="ab-label">ORDER NOW</span>
+  </a>
+</div>
+<div class="micro-serial">ISO-BOARDS-082</div>
+
+<div class="image-viewer" id="image-viewer" aria-hidden="true">
+  <div class="image-viewer-backdrop" id="image-viewer-backdrop"></div>
+  <div class="image-viewer-panel" role="dialog" aria-modal="true" aria-label="Board detail view">
+    <button class="image-viewer-close" id="image-viewer-close" type="button" aria-label="Close image viewer">×</button>
+    <img class="image-viewer-img" id="image-viewer-img" alt="">
+  </div>
+</div>
+
+<!-- ── ORDER MODAL ─────────────────────────────────────────────────────── -->
+<div class="order-modal" id="order-modal" aria-hidden="true">
+  <div class="order-modal-backdrop" id="order-modal-backdrop"></div>
+  <div class="order-modal-panel" role="dialog" aria-modal="true" aria-label="Order ISO Board">
+
+  <div class="om-form-col">
+
+    <div class="om-header">
+      <div class="om-header-left">
+        <span class="om-label">ISO BOARDS</span>
+        <span class="om-title">Place Your Order</span>
+      </div>
+      <button class="om-close" id="order-modal-close" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- STEP 1: Product + Quantity -->
+    <div class="om-step" id="om-step-1">
+      <div class="om-section-label">01 // SELECT BOARD</div>
+      <div class="om-products">
+        <div class="om-product active" data-product="Cheese &amp; Charcuterie Board">
+          <div class="om-product-dot"></div>
+          <div class="om-product-info">
+            <span class="om-product-name">Cheese &amp; Charcuterie</span>
+            <span class="om-product-sub">ISO-CHEESEPAIRING-RITUALS</span>
+          </div>
+        </div>
+        <div class="om-product" data-product="Dinner Board">
+          <div class="om-product-dot"></div>
+          <div class="om-product-info">
+            <span class="om-product-name">Dinner Board</span>
+            <span class="om-product-sub">ISO-DINNER-RITUALS</span>
+          </div>
+        </div>
+        <div class="om-product" data-product="Cheatsheet Board">
+          <div class="om-product-dot"></div>
+          <div class="om-product-info">
+            <span class="om-product-name">Cheatsheet Board</span>
+            <span class="om-product-sub">ISO-CHEATSHEET-BOARD</span>
+          </div>
+        </div>
+        <div class="om-product" data-product="Roots Board">
+          <div class="om-product-dot"></div>
+          <div class="om-product-info" style="width:100%;">
+            <span class="om-product-name">Roots Board</span>
+            <span class="om-product-sub">ISO-ROOTS-BOARD</span>
+            <div class="om-roots-attach" id="om-roots-attach">
+              <label class="om-attach-label" for="om-roots-file">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+                Submit handwriting photo or scan
+              </label>
+              <input type="file" id="om-roots-file" class="om-file-input" accept="image/*,.pdf">
+              <div class="om-file-chosen" id="om-file-chosen">No file chosen</div>
+            </div>
+          </div>
+        </div>
+        <div class="om-product" data-product="Custom Commission">
+          <div class="om-product-dot"></div>
+          <div class="om-product-info" style="width:100%;">
+            <span class="om-product-name">Custom Commission</span>
+            <span class="om-product-sub">BESPOKE</span>
+            <textarea class="om-custom-brief" id="om-custom-brief" rows="3" placeholder="Write a brief explanation of your needed design and our team will contact you to finalize the board content with you…"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="om-section-label" style="margin-top:24px;">02 // QUANTITY</div>
+      <div class="om-qty-row">
+        <button class="om-qty-btn" id="om-qty-minus">−</button>
+        <span class="om-qty-val" id="om-qty-val">1</span>
+        <button class="om-qty-btn" id="om-qty-plus">+</button>
+        <div class="om-qty-summary" id="om-qty-summary">1 board — $174.00</div>
+      </div>
+
+      <div class="om-pricing-note" id="om-pricing-note">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Single board — $174.00
+      </div>
+
+      <button class="om-next-btn" id="om-next-btn">
+        Continue
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+
+    <!-- STEP 2: Details -->
+    <div class="om-step" id="om-step-2" style="display:none;">
+      <div class="om-section-label">03 // YOUR DETAILS</div>
+      <div class="om-fields">
+        <div class="om-field">
+          <label class="om-field-label">Full Name</label>
+          <input class="om-input" id="om-name" type="text" placeholder="Your name" autocomplete="name">
+        </div>
+        <div class="om-field">
+          <label class="om-field-label">Note <span style="opacity:0.4">(optional)</span></label>
+          <input class="om-input" id="om-note" type="text" placeholder="Any special requests or engraving details">
+        </div>
+      </div>
+
+      <div class="om-order-summary" id="om-order-summary">
+        <div class="om-summary-row"><span>Product</span><span id="om-sum-product">—</span></div>
+        <div class="om-summary-row"><span>Quantity</span><span id="om-sum-qty">—</span></div>
+        <div class="om-summary-row om-summary-total"><span>Total</span><span id="om-sum-total">—</span></div>
+      </div>
+
+      <div class="om-step2-btns">
+        <button class="om-back-btn" id="om-back-btn">← Back</button>
+        <button class="om-checkout-btn" id="om-checkout-btn">
+          Proceed to Payment
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /.om-form-col -->
+
+  <div class="om-preview-col" id="om-preview-col">
+    <div class="om-preview-col-bg" id="om-preview-col-bg"></div>
+
+    <div class="om-preview-block">
+      <div class="om-preview-side-label">Front Side</div>
+      <img class="om-preview-img" id="om-preview-img-front" src="assets/step-22.png" alt="Front side">
+    </div>
+
+    <div class="om-preview-divider"></div>
+
+    <div class="om-preview-block">
+      <div class="om-preview-side-label">Back Side</div>
+      <img class="om-preview-img" id="om-preview-img-back" src="assets/board-main.png" alt="Back side">
+    </div>
+
+    <div class="om-preview-label">
+      <div class="om-preview-label-name" id="om-preview-label-name">Cheese &amp; Charcuterie</div>
+      <div class="om-preview-label-sub" id="om-preview-label-sub">ISO-CHEESEPAIRING-RITUALS</div>
+    </div>
+  </div>
+
+  </div>
+
+<script>
+  // ── Board sets per Ritual ──────────────────────────────────────────────────
+  const BOARD_SETS = {
+    cheese: {
+      coords: 'ISO RITUALS',
+      subtitle: 'ISO-CHEESEPAIRING-RITUALS',
+      tag: '',
+      spec: '',
+      desc: 'Dark walnut. Etched channels. Built for cheese, charcuterie, and the moments around them.',
+      images: [
+        { src: 'assets/step-22.png',    stepIndex: 0, flip: false },
+        { src: 'assets/step-33.png',    stepIndex: 1, flip: false },
+        { src: 'assets/step-44.png',    stepIndex: 2, flip: false },
+        { src: 'assets/board-main.png', stepIndex: 3, flip: true  }
+      ],
+      steps: [
+        { num: '01 // BASE',   main: 'Place your cheeses',     sub: 'Hard cheeses at the corners. Soft at center.' },
+        { num: '02 // CROWN',  main: 'Add cured meats',        sub: 'Fold prosciutto. Fan salami along the grain.' },
+        { num: '03 // FINISH', main: 'Fill the gaps',          sub: 'Honeycomb, figs, olives. No empty space.' },
+        { num: '04 // REVEAL', main: 'Turn it over',           sub: 'The engraved underside serves as a curated guide.' }
+      ]
+    },
+    dinner: {
+      coords: 'DINNER RITUALS',
+      subtitle: 'ISO-DINNER-RITUALS',
+      tag: '',
+      spec: '',
+      desc: 'Hardwood and compositions. Designed to hold a prime cut and inspire creative side dish pairings.',
+      images: [
+        { src: 'assets/steak-step-1.png',     stepIndex: 0, flip: false },
+        { src: 'assets/steak-step-2.png',     stepIndex: 1, flip: false },
+        { src: 'assets/steak-step-3.png',     stepIndex: 2, flip: false },
+        { src: 'assets/steak-board-main.png', stepIndex: 3, flip: true  }
+      ],
+      steps: [
+        { num: '01 // SEAR',   main: 'Rest the cut',              sub: 'Lay it along the designed placement.' },
+        { num: '02 // BUILD',  main: 'Enrich with accoutrements', sub: 'Place your Starch, Sides, Sauce. By design.' },
+        { num: '03 // PLATE',  main: 'Build the plate',           sub: 'Sauce, herb, butter. Place with intention.' },
+        { num: '04 // REVEAL', main: 'Turn it over',              sub: 'The engraved underside serves as a curated guide.' }
+      ]
+    },
+    roots: {
+      coords: 'ISO ROOTS',
+      subtitle: 'ISO-ROOTS-BOARD',
+      tag: '',
+      spec: '',
+      desc: 'A handwritten recipe, letter, or signature — etched into hardwood. A permanent piece from someone special.',
+      images: [
+        { src: 'assets/roots-step-1.png', stepIndex: 0, flip: false },
+        { src: 'assets/roots-step-2.png', stepIndex: 1, flip: false },
+        { src: 'assets/roots-board-main.png.png', stepIndex: 2, flip: true }
+      ],
+      steps: [
+        { num: '01 // TRACE',  main: 'Submit your document', sub: 'A photo or scan of the original handwriting.' },
+        { num: '02 // CARVE',  main: 'We etch it',           sub: 'Script, pressure, and line etched into dark walnut.' },
+        { num: '03 // REVEAL', main: 'Your board, ready',    sub: 'Packaged and delivered. Ready to gift or keep.' }
+      ]
+    },
+    custom: {
+      coords: 'ISO COMMISSION',
+      subtitle: 'Custom Commission',
+      tag: '',
+      spec: '',
+      desc: 'Bespoke boards for corporate gifts, events, and personal orders. Your mark, engraved. Serialized for permanence.',
+      images: [
+        { src: 'assets/custom-step-1.png', stepIndex: 0, flip: false },
+        { src: 'assets/custom-step-2.png', stepIndex: 1, flip: false },
+        { src: 'assets/custom-step-3.png', stepIndex: 2, flip: false }
+      ],
+      steps: [
+        { num: '01 // BRIEF',  main: 'Tell us your brief',    sub: 'Name, logo, message, quantity, occasion.' },
+        { num: '02 // DESIGN', main: 'We design the layout',  sub: 'Proportions, spacing, and engraving style refined.' },
+        { num: '03 // DETAIL', main: 'Final review',          sub: 'Custom curation for your custom commission.' }
+      ]
+    },
+    cheatsheet: {
+      coords: 'CHEAT SHEET',
+      subtitle: 'ISO-CHEATSHEET-BOARD',
+      tag: '',
+      spec: '',
+      desc: 'Temperatures, dicing guides, and flavor logic flows. Engraved directly into the wood. A high-fidelity information system for the kitchen. The only technical reference a home chef will ever need.',
+      images: [
+        { src: 'assets/cheatsheet-step-1.png',     stepIndex: 0, flip: false },
+        { src: 'assets/cheatsheet-step-2.png',     stepIndex: 1, flip: false },
+        { src: 'assets/cheatsheet-step-3.png',     stepIndex: 2, flip: false },
+        { src: 'assets/cheatsheet-board-main.png', stepIndex: 3, flip: true  }
+      ],
+      steps: [
+        { num: '01 // READ',   main: 'Read the data',      sub: 'Reference temperatures, volume circles, and conversion math.' },
+        { num: '02 // APPLY',  main: 'Precision Prep',     sub: 'Execute perfect cuts with the dicing guide and slicing angles.' },
+        { num: '03 // TUNE',   main: 'Correct the flavor', sub: 'Use the logic flow to balance acidity, salt, and bitterness.' },
+        { num: '04 // REVEAL', main: 'Turn it over',       sub: 'Access the searing fat index and vinaigrette composition matrix.' }
+      ]
+    }
+  };
+
+  // ── DOM refs ──────────────────────────────────────────────────────────────
+  const links           = document.querySelectorAll('.nav-links a');
+  const heroCoords      = document.getElementById('hero-coords');
+  const heroSubtitle    = document.getElementById('hero-subtitle');
+  const heroTag         = document.getElementById('hero-tag');
+  const heroSpec        = document.getElementById('hero-spec');
+  const heroDesc        = document.getElementById('hero-desc');
+  const actionCoord     = document.getElementById('ab-coord');
+  const cartCount       = document.querySelector('.cart-count');
+  const addToCart       = document.getElementById('add-to-cart');
+  const ritualsSubnav   = document.getElementById('rituals-subnav');
+  const ritualBtns      = document.querySelectorAll('.ritual-btn');
+  const ritualStage     = document.getElementById('ritual-stage');
+  const imageViewer     = document.getElementById('image-viewer');
+  const imageViewerImg  = document.getElementById('image-viewer-img');
+  const imageViewerClose = document.getElementById('image-viewer-close');
+  const imageViewerBackdrop = document.getElementById('image-viewer-backdrop');
+
+  let cycleImages = [];
+  let cycleIdx    = 0;
+  let cycleTimer  = null;
+  let cycleResumeTimeout = null;
+  let isRitualsActive = true; // default active section is RITUALS
+  let activePanels = [];
+  let activeFillSteps = [];
+  let loadToken = 0;
+  let viewerShouldResumeCycle = false;
+  let currentBoardKey = 'cheese';
+  const imageProbeCache = new Map();
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  function highlightStep(i) {
+    activeFillSteps.forEach((step, sIdx) => step.classList.toggle('active', sIdx === i));
+  }
+
+  function setBoardPose() {
+    const sampleBoard = document.querySelector('.board');
+    if (!sampleBoard) return;
+    function degToPx(deg) {
+      const w = sampleBoard.getBoundingClientRect().width || 600;
+      const rad = (deg * Math.PI) / 180;
+      const px  = w / (2 * Math.tan(Math.max(5 * Math.PI / 180, rad / 2)));
+      return Math.min(4000, Math.max(300, px));
+    }
+    const rx = 13.3;
+    const ry = -18.3;
+    const rz = 3.3;
+    const perspDeg = 53.5;
+    const perspPx = degToPx(perspDeg);
+    document.documentElement.style.setProperty('--rx', `${rx}deg`);
+    document.documentElement.style.setProperty('--ry', `${ry}deg`);
+    document.documentElement.style.setProperty('--rz', `${rz}deg`);
+    document.documentElement.style.setProperty('--persp', `${perspPx}px`);
+    document.documentElement.style.setProperty('--persp-deg', `${perspDeg}deg`);
+  }
+
+  function showFrontImage(src, panelIndex) {
+    const panel = activePanels[panelIndex];
+    if (!panel || !src) return;
+    panel.board.classList.remove('is-flipped');
+    panel.front.classList.remove('detail-zoom-br');
+    panel.front.classList.remove('detail-zoom-br-reverse');
+    if (panel.detailStack) panel.detailStack.classList.remove('active', 'zooming', 'reverse');
+    if (panel.detailBase) panel.detailBase.classList.remove('detail-closeup');
+    panel.front.src = src;
+    panel.front.style.display = 'block';
+  }
+
+  function showDetailZoomImage(src, panelIndex, closeup = false) {
+    const panel = activePanels[panelIndex];
+    if (!panel || !src) return;
+    panel.board.classList.remove('is-flipped');
+    panel.front.classList.remove('detail-zoom-br');
+    panel.front.classList.remove('detail-zoom-br-reverse');
+    if (panel.detailStack) panel.detailStack.classList.remove('active', 'zooming', 'reverse');
+    if (panel.detailBase) panel.detailBase.src = src;
+    if (panel.detailBase) panel.detailBase.classList.toggle('detail-closeup', closeup);
+    panel.front.style.display = 'none';
+    if (panel.detailStack) {
+      void panel.detailStack.offsetWidth;
+      panel.detailStack.classList.add('active');
+      if (!closeup) panel.detailStack.classList.add('zooming');
+    }
+  }
+
+  function showDetailZoomReverseImage(src, panelIndex, onComplete) {
+    const panel = activePanels[panelIndex];
+    if (!panel || !src) return;
+    panel.board.classList.remove('is-flipped');
+    panel.front.classList.remove('detail-zoom-br');
+    panel.front.classList.remove('detail-zoom-br-reverse');
+    if (panel.detailBase) panel.detailBase.src = src;
+    if (panel.detailBase) panel.detailBase.classList.remove('detail-closeup');
+    if (panel.detailStack) {
+      panel.detailStack.classList.remove('active', 'zooming', 'reverse');
+      void panel.detailStack.offsetWidth;
+      panel.detailStack.classList.add('active', 'reverse');
+      panel.detailStack.addEventListener('animationend', () => {
+        panel.detailStack.classList.remove('active', 'reverse');
+        if (typeof onComplete === 'function') onComplete();
+      }, { once: true });
+    }
+    panel.front.style.display = 'none';
+  }
+
+  function showBackImage(src, panelIndex) {
+    const panel = activePanels[panelIndex];
+    if (!panel || !src) return;
+    panel.shell.classList.remove('flip-zoom');
+    void panel.shell.offsetWidth;
+    panel.shell.classList.add('flip-zoom');
+    panel.shell.addEventListener('animationend', () => panel.shell.classList.remove('flip-zoom'), { once: true });
+    panel.front.classList.remove('detail-zoom-br');
+    panel.front.classList.remove('detail-zoom-br-reverse');
+    if (panel.detailStack) panel.detailStack.classList.remove('active', 'zooming', 'reverse');
+    if (panel.detailBase) panel.detailBase.classList.remove('detail-closeup');
+    panel.back.src = src;
+    panel.back.style.display = 'block';
+    panel.board.classList.add('is-flipped');
+  }
+
+  function splitCoords(raw) {
+    const parts = raw.split(' ');
+    if (parts.length === 2) return parts[0] + '<br>' + parts[1];
+    return raw;
+  }
+
+  function buildPreviewVariant(section, image) {
+    return [{
+      id: section,
+      label: 'Preview',
+      images: [{ src: image, stepIndex: 0, flip: false }]
+    }];
+  }
+
+  function buildPreviewSteps() {
+    return [{
+      num: '01 // PREVIEW',
+      main: 'Inspect board',
+      sub: 'Collection preview.'
+    }];
+  }
+
+  function clearCycleTimers() {
+    if (cycleTimer) clearInterval(cycleTimer);
+    if (cycleResumeTimeout) clearTimeout(cycleResumeTimeout);
+    cycleTimer = null;
+    cycleResumeTimeout = null;
+  }
+
+  function restartCycle(resetIndex = true) {
+    clearCycleTimers();
+    if (resetIndex) cycleIdx = 0;
+    if (cycleImages[0] && cycleImages[0].images.length > 1) cycleTimer = setInterval(nextSlide, 5200);
+  }
+
+  function pauseCycle(ms = 20000) {
+    clearCycleTimers();
+    cycleResumeTimeout = setTimeout(() => {
+      cycleResumeTimeout = null;
+      restartCycle(false);
+    }, ms);
+  }
+
+  function openImageViewer(src, alt = '') {
+    if (!imageViewer || !imageViewerImg || !src) return;
+    viewerShouldResumeCycle = !cycleResumeTimeout && Boolean(cycleTimer);
+    if (cycleTimer) {
+      clearInterval(cycleTimer);
+      cycleTimer = null;
+    }
+    imageViewerImg.src = src;
+    imageViewerImg.alt = alt || 'Expanded board image';
+    imageViewer.classList.add('open');
+    imageViewer.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeImageViewer() {
+    if (!imageViewer) return;
+    imageViewer.classList.remove('open');
+    imageViewer.setAttribute('aria-hidden', 'true');
+    if (viewerShouldResumeCycle && !cycleResumeTimeout) {
+      restartCycle(false);
+    }
+    viewerShouldResumeCycle = false;
+  }
+
+  if (ritualStage && !ritualStage.dataset.viewerBound) {
+    ritualStage.dataset.viewerBound = '1';
+    ritualStage.addEventListener('click', e => {
+      const image = e.target.closest('.board-image');
+      if (!image) return;
+      e.preventDefault();
+      openImageViewer(image.currentSrc || image.src, image.alt);
+    });
+  }
+
+  if (imageViewerClose) {
+    imageViewerClose.addEventListener('click', closeImageViewer);
+  }
+  if (imageViewerBackdrop) {
+    imageViewerBackdrop.addEventListener('click', closeImageViewer);
+  }
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && imageViewer && imageViewer.classList.contains('open')) {
+      closeImageViewer();
+    }
+  });
+
+  function playDetailZoomExit(nextIndex) {
+    cycleImages.forEach((variant, panelIndex) => {
+      const panel = activePanels[panelIndex];
+      if (!panel) return;
+      if (panel.detailStack) panel.detailStack.classList.remove('active', 'zooming', 'reverse');
+      const entry = variant.images[3] || variant.images[0];
+      if (panel.detailBase && entry) panel.detailBase.src = entry.baseSrc || entry.src;
+      if (panel.detailBase) panel.detailBase.classList.remove('detail-closeup');
+    });
+    displayStep(nextIndex, true);
+  }
+
+  function displayStep(index, skipDetailExit = false) {
+    if (!cycleImages.length) return;
+    const totalSteps = cycleImages[0]?.images.length || 0;
+    if (!totalSteps) return;
+    const safeIndex = ((index % totalSteps) + totalSteps) % totalSteps;
+    if (
+      !skipDetailExit &&
+      currentBoardKey === 'custom' &&
+      cycleIdx === 3 &&
+      safeIndex === 0 &&
+      cycleImages[0]?.images[3]?.detail === 'br'
+    ) {
+      playDetailZoomExit(0);
+      return;
+    }
+    cycleImages.forEach((variant, panelIndex) => {
+      const entry = variant.images[safeIndex] || variant.images[0];
+      if (!entry) return;
+      if (entry.flip) showBackImage(entry.src, panelIndex);
+      else if (entry.detailCloseup) showDetailZoomImage(entry.baseSrc || entry.src, panelIndex, true);
+      else if (entry.detailComposite || entry.detailZoom) showDetailZoomImage(entry.baseSrc || entry.src, panelIndex);
+      else showFrontImage(entry.src, panelIndex);
+    });
+    highlightStep(safeIndex);
+    cycleIdx = safeIndex;
+  }
+
+  function nextSlide() {
+    if (!cycleImages.length) return;
+    displayStep((cycleIdx + 1) % cycleImages[0].images.length);
+  }
+
+  function prefixAsset(src, prefix) {
+    if (!prefix) return src;
+    return src.replace(/(^|\/)([^/]+)$/, `$1${prefix}$2`);
+  }
+
+  function probeImage(src) {
+    if (imageProbeCache.has(src)) return imageProbeCache.get(src);
+    const probe = new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
+      img.src = src;
+    });
+    imageProbeCache.set(src, probe);
+    return probe;
+  }
+
+  async function resolveVariantSource(src, prefix) {
+    if (!prefix) return src;
+    const candidate = prefixAsset(src, prefix);
+    return (await probeImage(candidate)) ? candidate : src;
+  }
+
+  async function detectBoardVariants(boardData) {
+    const prefixes = [''];
+    for (let i = 2; i <= 6; i += 1) {
+      const prefix = `${i}-`;
+      const checks = await Promise.all(boardData.images.map(image => probeImage(prefixAsset(image.src, prefix))));
+      if (checks.some(Boolean)) prefixes.push(prefix);
+    }
+
+    const variants = await Promise.all(prefixes.map(async (prefix, idx) => {
+      const images = await Promise.all(boardData.images.map(async image => ({
+        ...image,
+        src: await resolveVariantSource(image.src, prefix)
+      })));
+      return {
+        id: prefix || 'base',
+        label: idx === 0 ? 'Primary Set' : `Set ${String(idx + 1).padStart(2, '0')}`,
+        images
+      };
+    }));
+
+    return variants;
+  }
+
+  function renderBoardPanels(variants, steps) {
+    if (!ritualStage) return;
+    ritualStage.innerHTML = `
+      <div class="ritual-sequence">
+        <div class="fill-steps">
+          <div class="fill-steps-label">${steps.length > 1 ? 'Fill Sequence' : 'Preview'}</div>
+          ${steps.map((step, stepIndex) => `
+            <div class="fill-step" data-step-index="${stepIndex}">
+              <div class="fill-step-meta">
+                <div class="step-num">${step.num}</div>
+                <div class="step-text">${step.main}<span>${step.sub}</span></div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="ritual-grid ${variants.length > 1 ? 'multi' : 'single'}">
+        ${variants.map((variant, variantIndex) => `
+          <div class="ritual-panel" data-panel-index="${variantIndex}">
+            <div class="ritual-board-shell">
+              <div class="board">
+                <div class="board-inner">
+                  <img class="board-image board-front" src="${variant.images[0] ? variant.images[0].src : ''}" alt="ISO board visual">
+                  <div class="board-detail-stack">
+                    <img class="board-image board-detail-base" src="${variant.images[0] ? variant.images[0].src : ''}" alt="ISO board detail base">
+                  </div>
+                  <img class="board-image board-back" src="${variant.images[variant.images.length - 1] ? variant.images[variant.images.length - 1].src : ''}" alt="ISO board back">
+                </div>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+
+    activeFillSteps = Array.from(ritualStage.querySelectorAll('.fill-step'));
+    activePanels = Array.from(ritualStage.querySelectorAll('.ritual-panel')).map(panel => {
+      return {
+        shell: panel.querySelector('.ritual-board-shell'),
+        board: panel.querySelector('.board'),
+        front: panel.querySelector('.board-front'),
+        back: panel.querySelector('.board-back'),
+        detailStack: panel.querySelector('.board-detail-stack'),
+        detailBase: panel.querySelector('.board-detail-base')
+      };
+    });
+
+    activeFillSteps.forEach(step => {
+      step.addEventListener('click', e => {
+        e.preventDefault();
+        const stepIndex = Number(step.dataset.stepIndex || 0);
+        displayStep(stepIndex);
+        cycleIdx = stepIndex;
+        pauseCycle(10000);
+      });
+    });
+
+    setBoardPose();
+  }
+
+  // Load a full board-set (hero content + images + fill steps)
+  async function loadBoardSet(key) {
+    const data = BOARD_SETS[key];
+    if (!data) return;
+    currentBoardKey = key;
+    if (ritualsSubnav) {
+      ritualsSubnav.classList.toggle('visible', key === 'cheese' || key === 'dinner');
+    }
+    const token = ++loadToken;
+    const variants = await detectBoardVariants(data);
+    if (token !== loadToken) return;
+
+    cycleImages = variants;
+    cycleIdx = 0;
+
+    // Hero text fade
+    [heroCoords, heroSubtitle, heroTag, heroSpec, heroDesc].forEach(el => {
+      el.style.transition = 'opacity 0.15s ease, transform 0.15s ease';
+      el.style.opacity    = '0';
+      el.style.transform  = 'translateY(6px)';
+    });
+
+    setTimeout(() => {
+      heroCoords.innerHTML   = splitCoords(data.coords);
+      heroSubtitle.textContent = data.subtitle;
+      heroTag.textContent    = data.tag;
+      heroSpec.textContent   = data.spec;
+      heroDesc.textContent   = data.desc;
+      renderBoardPanels(variants, data.steps);
+      displayStep(0);
+      [heroCoords, heroSubtitle, heroTag, heroSpec, heroDesc].forEach(el => {
+        el.style.opacity   = '1';
+        el.style.transform = 'translateY(0)';
+      });
+    }, 170);
+
+    restartCycle();
+  }
+
+  // ── Product thumbnail browser ─────────────────────────────────────────────
+  const abProducts = Array.from(document.querySelectorAll('.ab-product'));
+
+  function setActiveProduct(productKey) {
+    abProducts.forEach(p => p.classList.toggle('active', p.dataset.product === productKey));
+  }
+
+  abProducts.forEach(prod => {
+    prod.addEventListener('click', () => {
+      // Fire one-shot zoom animation on the bg
+      const bg = prod.querySelector('.ab-product-bg');
+      if (bg) {
+        bg.classList.remove('click-flash');
+        void bg.offsetWidth; // reflow to restart
+        bg.classList.add('click-flash');
+        bg.addEventListener('animationend', () => bg.classList.remove('click-flash'), { once: true });
+      }
+      const section  = prod.dataset.section;
+      const boardKey = prod.dataset.board; // only set for ritual products
+
+      // Update thumbnail highlight
+      setActiveProduct(prod.dataset.product);
+
+      if (section === 'rituals') {
+        // Activate rituals nav link
+        links.forEach(l => l.classList.remove('active'));
+        const ritualsLink = document.querySelector('[data-section="rituals"]');
+        if (ritualsLink) ritualsLink.classList.add('active');
+        ritualsSubnav.classList.add('visible');
+        isRitualsActive = true;
+        // Activate correct ritual sub-btn
+        ritualBtns.forEach(b => b.classList.remove('active'));
+        const targetBtn = document.querySelector(`.ritual-btn[data-board="${boardKey}"]`);
+        if (targetBtn) targetBtn.classList.add('active');
+        loadBoardSet(boardKey);
+      } else {
+        // Find and activate the matching nav link
+        const targetLink = document.querySelector(`.nav-links a[data-section="${section}"]`);
+        if (targetLink) {
+          links.forEach(l => l.classList.remove('active'));
+          targetLink.classList.add('active');
+          isRitualsActive = false;
+          ritualsSubnav.classList.remove('visible');
+
+          if (section === 'cheatsheet' || section === 'roots' || section === 'custom') {
+            loadBoardSet(section);
+            return;
+          }
+
+          const coords   = targetLink.dataset.coords;
+          const subtitle = targetLink.dataset.subtitle;
+          const tag      = targetLink.dataset.tag;
+          const spec     = targetLink.dataset.spec;
+          const desc     = targetLink.dataset.desc;
+          const image    = targetLink.dataset.image;
+
+          [heroCoords, heroSubtitle, heroTag, heroSpec, heroDesc].forEach(el => {
+            el.style.transition = 'opacity 0.18s ease, transform 0.18s ease';
+            el.style.opacity    = '0';
+            el.style.transform  = 'translateY(8px)';
+          });
+          setTimeout(() => {
+            heroCoords.innerHTML      = splitCoords(coords);
+            heroSubtitle.textContent  = subtitle;
+            heroTag.textContent       = tag;
+            heroSpec.textContent      = spec;
+            heroDesc.textContent      = desc;
+            [heroCoords, heroSubtitle, heroTag, heroSpec, heroDesc].forEach(el => {
+              el.style.opacity = '1'; el.style.transform = 'translateY(0)';
+            });
+          }, 200);
+
+          cycleImages = buildPreviewVariant(section, image);
+          cycleIdx    = 0;
+          renderBoardPanels(cycleImages, buildPreviewSteps());
+          restartCycle();
+          if (image) displayStep(0);
+        }
+      }
+    });
+  });
+
+  // Sync thumbnail when main nav links are clicked
+  function syncProductFromNav(section, boardKey) {
+    if (section === 'rituals') {
+      const activeBoard = boardKey || (document.querySelector('.ritual-btn.active') || {}).dataset?.board || 'cheese';
+      setActiveProduct(activeBoard);
+    } else {
+      setActiveProduct(section);
+    }
+  }
+
+  // ── Rituals sub-nav ───────────────────────────────────────────────────────
+  ritualBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      ritualBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      loadBoardSet(btn.dataset.board);
+      setActiveProduct(btn.dataset.board);
+    });
+  });
+
+  // ── Main nav links ─────────────────────────────────────────────────────────
+  links.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      links.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+
+      const section = link.dataset.section;
+      isRitualsActive = (section === 'rituals');
+
+      // Show/hide rituals sub-nav
+      if (isRitualsActive) {
+        ritualsSubnav.classList.add('visible');
+        // Load whichever ritual board is currently active
+        const activeRitualBtn = document.querySelector('.ritual-btn.active');
+        const boardKey = activeRitualBtn ? activeRitualBtn.dataset.board : 'cheese';
+        loadBoardSet(boardKey);
+        syncProductFromNav('rituals', boardKey);
+      } else if (section === 'roots') {
+        loadBoardSet('roots');
+        syncProductFromNav(section);
+      } else if (section === 'custom') {
+        loadBoardSet('custom');
+        syncProductFromNav(section);
+      } else {
+        ritualsSubnav.classList.remove('visible');
+        syncProductFromNav(section);
+        if (section === 'cheatsheet') {
+          loadBoardSet('cheatsheet');
+          return;
+        }
+        // Regular non-ritual nav behaviour
+        const coords   = link.dataset.coords;
+        const subtitle = link.dataset.subtitle;
+        const tag      = link.dataset.tag;
+        const spec     = link.dataset.spec;
+        const desc     = link.dataset.desc;
+        const image    = link.dataset.image;
+
+        [heroCoords, heroSubtitle, heroTag, heroSpec, heroDesc].forEach(el => {
+          el.style.transition = 'opacity 0.18s ease, transform 0.18s ease';
+          el.style.opacity    = '0';
+          el.style.transform  = 'translateY(8px)';
+        });
+        setTimeout(() => {
+          heroCoords.innerHTML      = splitCoords(coords);
+          heroSubtitle.textContent  = subtitle;
+          heroTag.textContent       = tag;
+          heroSpec.textContent      = spec;
+          heroDesc.textContent      = desc;
+            [heroCoords, heroSubtitle, heroTag, heroSpec, heroDesc].forEach(el => {
+              el.style.opacity = '1'; el.style.transform = 'translateY(0)';
+            });
+        }, 200);
+
+        cycleImages = buildPreviewVariant(section, image);
+        cycleIdx    = 0;
+        renderBoardPanels(cycleImages, buildPreviewSteps());
+        restartCycle();
+        if (image) displayStep(0);
+      }
+    });
+  });
+
+  // ── Cart count removed — ORDER NOW now opens the modal ───────────────────
+
+  // ── Auto-cycle (starts on Charcuterie board) ──────────────────────────────
+  loadBoardSet('cheese');
+
+  // ── Theme toggle ──────────────────────────────────────────────────────────
+  (function() {
+    const themeToggle = document.getElementById('theme-toggle');
+    const root = document.documentElement;
+    function showIcon(theme) {
+      if (!themeToggle) return;
+      const sun = themeToggle.querySelector('.sun');
+      const moon = themeToggle.querySelector('.moon');
+      if (theme === 'light') {
+        if (sun)  sun.style.display  = 'inline';
+        if (moon) moon.style.display = 'none';
+        themeToggle.setAttribute('aria-pressed', 'true');
+      } else {
+        if (sun)  sun.style.display  = 'none';
+        if (moon) moon.style.display = 'inline';
+        themeToggle.setAttribute('aria-pressed', 'false');
+      }
+    }
+    function applyTheme(theme) {
+      try {
+        if (theme === 'light') root.setAttribute('data-theme', 'light');
+        else root.removeAttribute('data-theme');
+        localStorage.setItem('theme', theme);
+        showIcon(theme);
+      } catch(e) {}
+    }
+    try {
+      const stored = localStorage.getItem('theme');
+      if (stored === 'light') applyTheme('light'); else applyTheme('dark');
+    } catch(e) { applyTheme('dark'); }
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => {
+        applyTheme(localStorage.getItem('theme') === 'light' ? 'dark' : 'light');
+      });
+    }
+  })();
+
+
+  // ── See All Boards — cycles through nav tabs ─────────────────────────────
+  const seeAllBtn = document.getElementById('see-all-boards-btn');
+  if (seeAllBtn) {
+    let seeAllIdx = 0;
+    seeAllBtn.addEventListener('click', e => {
+      e.preventDefault();
+      const allLinks = Array.from(document.querySelectorAll('.nav-links a'));
+      seeAllIdx = (seeAllIdx + 1) % allLinks.length;
+      allLinks[seeAllIdx].click();
+    });
+  }
+
+  // ── ORDER MODAL ───────────────────────────────────────────────────────────
+  const ZIINA_1  = 'https://pay.ziina.com/ste/IFRXB9oyN';
+  const ZIINA_2  = 'https://pay.ziina.com/ste/04B6Mqu9D';
+  const WA_LINK  = 'https://web.whatsapp.com/send?phone=971565586682';
+
+  const orderModal        = document.getElementById('order-modal');
+  const orderModalClose   = document.getElementById('order-modal-close');
+  const orderModalBackdrop= document.getElementById('order-modal-backdrop');
+  const heroOrderBtn      = document.getElementById('hero-order-btn');
+  const abOrderBtn        = document.getElementById('add-to-cart');
+  const omStep1           = document.getElementById('om-step-1');
+  const omStep2           = document.getElementById('om-step-2');
+  const omNextBtn         = document.getElementById('om-next-btn');
+  const omBackBtn         = document.getElementById('om-back-btn');
+  const omCheckoutBtn     = document.getElementById('om-checkout-btn');
+  const omQtyMinus        = document.getElementById('om-qty-minus');
+  const omQtyPlus         = document.getElementById('om-qty-plus');
+  const omQtyVal          = document.getElementById('om-qty-val');
+  const omQtySummary      = document.getElementById('om-qty-summary');
+  const omPricingNote     = document.getElementById('om-pricing-note');
+  const omSumProduct      = document.getElementById('om-sum-product');
+  const omSumQty          = document.getElementById('om-sum-qty');
+  const omSumTotal        = document.getElementById('om-sum-total');
+
+  let omQty = 1;
+  let omSelectedProduct = 'Cheese & Charcuterie Board';
+
+  const rootsFileInput = document.getElementById('om-roots-file');
+  const fileChosen     = document.getElementById('om-file-chosen');
+
+  function omUpdateQtyUI() {
+    omQtyVal.textContent = omQty;
+    if (omQty === 1) {
+      omQtySummary.textContent = '1 board — $174.00';
+      omPricingNote.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Single board — $174.00';
+    } else if (omQty === 2) {
+      omQtySummary.textContent = '2 boards — 10% off';
+      omPricingNote.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 2 boards — 10% discount applied';
+    } else {
+      omQtySummary.textContent = omQty + ' boards — special pricing';
+      omPricingNote.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 3+ boards — we\'ll arrange a special deal on WhatsApp';
+    }
+  }
+
+  function omOpenModal() {
+    omQty = 1;
+    omUpdateQtyUI();
+    omStep1.style.display = 'block';
+    omStep2.style.display = 'none';
+    // Reset product selection to first
+    document.querySelectorAll('.om-product').forEach(x => x.classList.remove('active'));
+    document.querySelector('.om-product').classList.add('active');
+    omSelectedProduct = 'Cheese & Charcuterie Board';
+    omUpdatePreview(omSelectedProduct);
+    // Reset file input
+    if (rootsFileInput) { rootsFileInput.value = ''; fileChosen.textContent = 'No file chosen'; }
+    orderModal.classList.add('open');
+    orderModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function omCloseModal() {
+    orderModal.classList.remove('open');
+    orderModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  if (heroOrderBtn)  heroOrderBtn.addEventListener('click',  e => { e.preventDefault(); omOpenModal(); });
+  if (abOrderBtn)    abOrderBtn.addEventListener('click',    e => { e.preventDefault(); omOpenModal(); });
+  if (orderModalClose)    orderModalClose.addEventListener('click',    omCloseModal);
+  if (orderModalBackdrop) orderModalBackdrop.addEventListener('click', omCloseModal);
+
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && orderModal && orderModal.classList.contains('open')) omCloseModal();
+  });
+
+  // Product selection
+  const omProductPreviews = {
+    'Cheese & Charcuterie Board': { front: 'assets/step-22.png',           back: 'assets/board-main.png',           name: 'Cheese & Charcuterie', sub: 'ISO-CHEESEPAIRING-RITUALS' },
+    'Dinner Board':               { front: 'assets/steak-step-1.png',      back: 'assets/steak-board-main.png',     name: 'Dinner Board',         sub: 'ISO-DINNER-RITUALS'       },
+    'Cheatsheet Board':           { front: 'assets/cheatsheet-step-1.png', back: 'assets/cheatsheet-board-main.png',name: 'Cheatsheet Board',     sub: 'ISO-CHEATSHEET-BOARD'     },
+    'Roots Board':                { front: 'assets/roots-step-1.png',      back: 'assets/roots-board-main.png.png', name: 'Roots Board',          sub: 'ISO-ROOTS-BOARD'          },
+    'Custom Commission':          { front: 'assets/custom-step-1.png',     back: 'assets/custom-step-1.png',        name: 'Custom Commission',    sub: 'BESPOKE'                  },
+  };
+  const omPreviewFront     = document.getElementById('om-preview-img-front');
+  const omPreviewBack      = document.getElementById('om-preview-img-back');
+  const omPreviewColBg     = document.getElementById('om-preview-col-bg');
+  const omPreviewLabelName = document.getElementById('om-preview-label-name');
+  const omPreviewLabelSub  = document.getElementById('om-preview-label-sub');
+
+  function omUpdatePreview(productKey) {
+    const p = omProductPreviews[productKey];
+    if (!p) return;
+    [omPreviewFront, omPreviewBack].forEach(el => el.classList.add('switching'));
+    setTimeout(() => {
+      omPreviewFront.src = p.front;
+      omPreviewBack.src  = p.back;
+      omPreviewColBg.style.backgroundImage = `url('${p.front}')`;
+      omPreviewLabelName.textContent = p.name;
+      omPreviewLabelSub.textContent  = p.sub;
+      [omPreviewFront, omPreviewBack].forEach(el => el.classList.remove('switching'));
+    }, 280);
+  }
+
+  document.querySelectorAll('.om-product').forEach(p => {
+    p.addEventListener('click', () => {
+      document.querySelectorAll('.om-product').forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+      omSelectedProduct = p.dataset.product;
+      omUpdatePreview(omSelectedProduct);
+    });
+  });
+
+  // Quantity
+  omQtyMinus.addEventListener('click', () => { if (omQty > 1) { omQty--; omUpdateQtyUI(); } });
+  omQtyPlus.addEventListener('click',  () => { omQty++; omUpdateQtyUI(); });
+
+  // Step 1 → Step 2
+  omNextBtn.addEventListener('click', () => {
+    // Update summary
+    const totalText = omQty === 1 ? '$174.00' : omQty === 2 ? '10% discount applied' : 'Special deal — via WhatsApp';
+    omSumProduct.textContent = omSelectedProduct;
+    omSumQty.textContent     = omQty + (omQty === 1 ? ' board' : ' boards');
+    omSumTotal.textContent   = omQty === 1 ? '$174.00' : omQty === 2 ? '10% off — see Ziina' : 'Contact for pricing';
+
+    // If 3+ boards, swap checkout button to WhatsApp
+    if (omQty >= 3) {
+      omCheckoutBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg> Chat on WhatsApp';
+      omCheckoutBtn.style.borderColor = '#25d366';
+      omCheckoutBtn.style.background  = 'linear-gradient(180deg, rgba(37,211,102,0.14) 0%, rgba(37,211,102,0.06) 100%)';
+    } else {
+      omCheckoutBtn.innerHTML = 'Proceed to Payment <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+      omCheckoutBtn.style.borderColor = '';
+      omCheckoutBtn.style.background  = '';
+    }
+
+    omStep1.style.display = 'none';
+    omStep2.style.display = 'block';
+  });
+
+  // Step 2 → Back
+  omBackBtn.addEventListener('click', () => {
+    omStep2.style.display = 'none';
+    omStep1.style.display = 'block';
+  });
+
+  const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz-uxRczMNnLTsvTMwTV3j20Hhz8Fzayq7P-rzIoYUb1w5p-pywK_V-SiRDhjnovzFLKQ/exec';
+
+  // File chosen display
+  if (rootsFileInput) {
+    rootsFileInput.addEventListener('change', () => {
+      fileChosen.textContent = rootsFileInput.files[0] ? rootsFileInput.files[0].name : 'No file chosen';
+    });
+  }
+
+  function readFileAsBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload  = () => resolve(reader.result.split(',')[1]); // strip data:...;base64,
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function logToSheets(data) {
+    try {
+      await fetch(SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(data)
+      });
+      console.log('Sheet log sent.');
+    } catch(e) { console.log('Sheet log error:', e); }
+  }
+
+  // Checkout / WhatsApp
+  omCheckoutBtn.addEventListener('click', async () => {
+    const name     = document.getElementById('om-name').value.trim();
+    const note     = document.getElementById('om-note').value.trim();
+    const brief    = document.getElementById('om-custom-brief') ? document.getElementById('om-custom-brief').value.trim() : '';
+    const file     = (rootsFileInput && rootsFileInput.files[0]) ? rootsFileInput.files[0] : null;
+    const fileName = file ? file.name : '';
+    const fileType = file ? file.type : '';
+
+    // Build payload
+    const payload = {
+      product:  omSelectedProduct,
+      quantity: omQty,
+      name:     name     || '—',
+      note:     note     || '—',
+      brief:    brief    || '—',
+      fileName: fileName || '—',
+      fileType: fileType || '—',
+      fileData: ''
+    };
+
+    if (file) {
+      try { payload.fileData = await readFileAsBase64(file); } catch(e) { console.log('base64 error', e); }
+    }
+
+    // Show loading state on button
+    const originalHTML = omCheckoutBtn.innerHTML;
+    omCheckoutBtn.innerHTML = 'Saving… <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>';
+    omCheckoutBtn.disabled = true;
+
+    // Always await the sheet log so it completes before modal closes
+    await logToSheets(payload);
+
+    // Restore button
+    omCheckoutBtn.innerHTML = originalHTML;
+    omCheckoutBtn.disabled  = false;
+
+    if (omQty >= 3) {
+      const msg = encodeURIComponent(
+        `Hi ISO Boards! I'd like to order ${omQty}x ${omSelectedProduct}.` +
+        (name     ? `\nName: ${name}`                : '') +
+        (brief    ? `\nDesign Brief: ${brief}`        : '') +
+        (fileName ? `\nHandwriting file: ${fileName}` : '') +
+        (note     ? `\nNote: ${note}`                 : '')
+      );
+      window.open(`${WA_LINK}&text=${msg}`, '_blank');
+    } else {
+      const link = omQty === 2 ? ZIINA_2 : ZIINA_1;
+      window.open(link, '_blank');
+    }
+    omCloseModal();
+  });
+
+  window.addEventListener('resize', setBoardPose);
+</script>
+</body>
+</html>
