@@ -2888,22 +2888,70 @@
     });
   }
 
-  function logToSheets(data) {
-    return new Promise((resolve) => {
-      const params = new URLSearchParams({
-        product:  String(data.product  || '—'),
-        quantity: String(data.quantity || '—'),
-        name:     String(data.name     || '—'),
-        note:     String(data.note     || '—'),
-        brief:    String(data.brief    || '—'),
-        fileName: String(data.fileName || '—')
-      });
-      const img = new Image();
-      img.onload  = () => resolve();
-      img.onerror = () => resolve(); // onerror is normal — script returns text not an image
-      img.src = SHEETS_URL + '?' + params.toString();
+  // Convert an attached File object → base64 string
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload  = () => resolve(reader.result.split(',')[1]); // strip "data:...;base64," prefix
+      reader.onerror = () => reject(new Error('File read failed'));
+      reader.readAsDataURL(file);
     });
   }
+
+  // Send order data (+ optional file) to the Apps Script via POST FormData.
+  // Apps Script must have a doPost() handler — see comment block below.
+  async function logToSheets(data) {
+    try {
+      const fd = new FormData();
+      fd.append('product',      data.product       || '');
+      fd.append('quantity',     String(data.quantity !== undefined ? data.quantity : ''));
+      fd.append('name',         data.name          || '');
+      fd.append('note',         data.note          || '');
+      fd.append('brief',        data.brief         || '');
+      fd.append('fileName',     data.fileName      || '');
+      if (data.fileData) {
+        fd.append('fileData',     data.fileData);
+        fd.append('fileMimeType', data.fileMimeType || 'application/octet-stream');
+      }
+      await fetch(SHEETS_URL, { method: 'POST', body: fd, mode: 'no-cors' });
+    } catch (e) {
+      // silent fail — never block the purchase flow
+      console.warn('logToSheets error:', e);
+    }
+  }
+
+  /*
+   * ── REQUIRED: update your Google Apps Script to add a doPost() handler ──
+   *
+   * function doPost(e) {
+   *   const params = e.parameter;
+   *   const sheet  = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+   *   let driveUrl = '';
+   *
+   *   if (params.fileData && params.fileName) {
+   *     const bytes   = Utilities.base64Decode(params.fileData);
+   *     const blob    = Utilities.newBlob(bytes, params.fileMimeType || 'application/octet-stream', params.fileName);
+   *     const folder  = DriveApp.getFolderById('YOUR_DRIVE_FOLDER_ID'); // ← replace with your folder ID
+   *     const driveFile = folder.createFile(blob);
+   *     driveUrl = driveFile.getUrl();
+   *   }
+   *
+   *   sheet.appendRow([
+   *     new Date().toISOString(),
+   *     params.product  || '',
+   *     params.quantity || '',
+   *     params.name     || '',
+   *     params.note     || '',
+   *     params.brief    || '',
+   *     params.fileName || '',
+   *     driveUrl                // Google Drive link in its own column
+   *   ]);
+   *
+   *   return ContentService
+   *     .createTextOutput(JSON.stringify({ status: 'ok' }))
+   *     .setMimeType(ContentService.MimeType.JSON);
+   * }
+   */
 
   // Checkout / WhatsApp
   omCheckoutBtn.addEventListener('click', async () => {
@@ -2918,14 +2966,28 @@
     omCheckoutBtn.innerHTML = 'Saving…';
     omCheckoutBtn.disabled = true;
 
-    // Log to Google Sheets
+    // Read file as base64 if one was attached
+    let fileData     = '';
+    let fileMimeType = '';
+    if (file) {
+      try {
+        fileData     = await fileToBase64(file);
+        fileMimeType = file.type || 'application/octet-stream';
+      } catch (e) {
+        console.warn('Could not read attached file:', e);
+      }
+    }
+
+    // Log to Google Sheets + upload file to Drive
     await logToSheets({
-      product:  omSelectedProduct,
-      quantity: omQty,
-      name:     name     || '—',
-      note:     note     || '—',
-      brief:    brief    || '—',
-      fileName: fileName || '—'
+      product:      omSelectedProduct,
+      quantity:     omQty,
+      name:         name     || '',
+      note:         note     || '',
+      brief:        brief    || '',
+      fileName:     fileName || '',
+      fileData:     fileData,
+      fileMimeType: fileMimeType
     });
 
     // Restore button
