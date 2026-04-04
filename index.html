@@ -2879,7 +2879,7 @@
     omStep1.style.display = 'block';
   });
 
-  const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz-uxRczMNnLTsvTMwTV3j20Hhz8Fzayq7P-rzIoYUb1w5p-pywK_V-SiRDhjnovzFLKQ/exec';
+  const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwlZJFb_dWnNQyt0SeGGOea6lFsOBumucg0kyN5iWBn3MrT9wifzG4DAKY8m8Zelu7wfg/exec';
 
   // File chosen display
   if (rootsFileInput) {
@@ -2888,25 +2888,21 @@
     });
   }
 
-  function readFileAsBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload  = () => resolve(reader.result.split(',')[1]); // strip data:...;base64,
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
-
-  async function logToSheets(data) {
-    try {
-      await fetch(SHEETS_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify(data)
+  function logToSheets(data) {
+    return new Promise((resolve) => {
+      const params = new URLSearchParams({
+        product:  String(data.product  || '—'),
+        quantity: String(data.quantity || '—'),
+        name:     String(data.name     || '—'),
+        note:     String(data.note     || '—'),
+        brief:    String(data.brief    || '—'),
+        fileName: String(data.fileName || '—')
       });
-      console.log('Sheet log sent.');
-    } catch(e) { console.log('Sheet log error:', e); }
+      const img = new Image();
+      img.onload  = () => resolve();
+      img.onerror = () => resolve(); // onerror is normal — script returns text not an image
+      img.src = SHEETS_URL + '?' + params.toString();
+    });
   }
 
   // Checkout / WhatsApp
@@ -2916,31 +2912,21 @@
     const brief    = document.getElementById('om-custom-brief') ? document.getElementById('om-custom-brief').value.trim() : '';
     const file     = (rootsFileInput && rootsFileInput.files[0]) ? rootsFileInput.files[0] : null;
     const fileName = file ? file.name : '';
-    const fileType = file ? file.type : '';
 
-    // Build payload
-    const payload = {
+    // Show loading state
+    const originalHTML = omCheckoutBtn.innerHTML;
+    omCheckoutBtn.innerHTML = 'Saving…';
+    omCheckoutBtn.disabled = true;
+
+    // Log to Google Sheets
+    await logToSheets({
       product:  omSelectedProduct,
       quantity: omQty,
       name:     name     || '—',
       note:     note     || '—',
       brief:    brief    || '—',
-      fileName: fileName || '—',
-      fileType: fileType || '—',
-      fileData: ''
-    };
-
-    if (file) {
-      try { payload.fileData = await readFileAsBase64(file); } catch(e) { console.log('base64 error', e); }
-    }
-
-    // Show loading state on button
-    const originalHTML = omCheckoutBtn.innerHTML;
-    omCheckoutBtn.innerHTML = 'Saving… <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>';
-    omCheckoutBtn.disabled = true;
-
-    // Always await the sheet log so it completes before modal closes
-    await logToSheets(payload);
+      fileName: fileName || '—'
+    });
 
     // Restore button
     omCheckoutBtn.innerHTML = originalHTML;
