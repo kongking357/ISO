@@ -3108,8 +3108,32 @@
     omStep2.style.display = 'none';
     omStep1.style.display = 'block';
   });
+async function createZiinaPayment(amount, message) {
+  // We use URLSearchParams so the Google Script can read the 'action' and 'amount'
+  const params = new URLSearchParams();
+  params.append('action', 'ziina_pay');
+  params.append('amount', amount);
+  params.append('message', message);
+  params.append('success_url', window.location.origin + '/success.html');
+  params.append('cancel_url', window.location.href);
 
-  const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyN46uLaHdVMrsBkUw1QMf-HAOJ8pZteyTvbMQeh02GJXz0p3_uutipzeXvL4PjHwIdMw/exec';
+  const response = await fetch(SHEETS_URL, {
+    method: 'POST',
+    body: params,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  });
+
+  const data = await response.json();
+
+  if (data.error) {
+    throw new Error(data.error);
+  }
+
+  return data.redirect_url;
+}
+  const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzaaGoIKgkg_ZqwvBUC7oYG77mxvZ86vH8QVJUHd_8ojvtZce6_Hvofxbgo0mcfeurK4w/exec';
 
   // File chosen display
   if (rootsFileInput) {
@@ -3147,93 +3171,71 @@
         fd.append('fileData',     data.fileData);
         fd.append('fileMimeType', data.fileMimeType || 'application/octet-stream');
       }
-      await fetch(SHEETS_URL, { method: 'POST', body: fd });
+      await fetch(SHEETS_URL, { method: 'POST', body: fd, mode: 'no-cors' });
     } catch (e) {
       console.warn('logToSheets error:', e);
     }
   }
 
   /*
-   * ── GOOGLE APPS SCRIPT — replace your existing doPost() with this ──────
-   *
-   * var ZIINA_API_KEY = 'YOUR_ZIINA_API_KEY'; // ← paste your Ziina key here
+   * ── REQUIRED: update your Google Apps Script to add a doPost() handler ──
    *
    * function doPost(e) {
-   *   var params = e.parameter;
+   *   const params = e.parameter;
+   *   const sheet  = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+   *   let driveUrl = '';
    *
-   *   // ── Branch 1: Ziina payment proxy ──────────────────────────────────
-   *   if (params.action === 'ziina_pay') {
-   *     var payload = {
-   *       amount:       parseInt(params.amount),
-   *       currency_code:'AED',
-   *       message:      params.message      || 'ISO Boards Order',
-   *       success_url:  params.success_url  || '',
-   *       cancel_url:   params.cancel_url   || '',
-   *       test:         false  // set true for test mode
-   *     };
-   *     var options = {
-   *       method:      'post',
-   *       contentType: 'application/json',
-   *       headers:     { Authorization: 'Bearer ' + ZIINA_API_KEY },
-   *       payload:     JSON.stringify(payload),
-   *       muteHttpExceptions: true
-   *     };
-   *     var resp = UrlFetchApp.fetch('https://api-v2.ziina.com/api/payment_intent', options);
-   *     var body = JSON.parse(resp.getContentText());
-   *     return ContentService
-   *       .createTextOutput(JSON.stringify({ redirect_url: body.redirect_url || null, error: body.message || null }))
-   *       .setMimeType(ContentService.MimeType.JSON);
-   *   }
-   *
-   *   // ── Branch 2: Log order to Sheets ──────────────────────────────────
-   *   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-   *   var driveUrl = '';
    *   if (params.fileData && params.fileName) {
-   *     var bytes     = Utilities.base64Decode(params.fileData);
-   *     var blob      = Utilities.newBlob(bytes, params.fileMimeType || 'application/octet-stream', params.fileName);
-   *     var folder    = DriveApp.getFolderById('YOUR_DRIVE_FOLDER_ID');
-   *     var driveFile = folder.createFile(blob);
+   *     const bytes   = Utilities.base64Decode(params.fileData);
+   *     const blob    = Utilities.newBlob(bytes, params.fileMimeType || 'application/octet-stream', params.fileName);
+   *     const folder  = DriveApp.getFolderById('YOUR_DRIVE_FOLDER_ID'); // ← replace with your folder ID
+   *     const driveFile = folder.createFile(blob);
    *     driveUrl = driveFile.getUrl();
    *   }
+   *
    *   sheet.appendRow([
    *     new Date().toISOString(),
-   *     params.product        || '',
-   *     params.quantity       || '',
-   *     params.name           || '',
-   *     params.country        || '',
-   *     params.address        || '',
-   *     params.shippingMethod || '',
-   *     params.shippingFee    || '',
-   *     params.note           || '',
-   *     params.brief          || '',
-   *     params.fileName       || '',
-   *     driveUrl
+   *     params.product  || '',
+   *     params.quantity || '',
+   *     params.name     || '',
+   *     params.note     || '',
+   *     params.brief    || '',
+   *     params.fileName || '',
+   *     driveUrl                // Google Drive link in its own column
    *   ]);
+   *
    *   return ContentService
    *     .createTextOutput(JSON.stringify({ status: 'ok' }))
    *     .setMimeType(ContentService.MimeType.JSON);
    * }
    */
 
-  // ── ZIINA PAYMENT — proxied through your Google Apps Script ─────────────
-  // Ziina's API blocks direct browser calls (CORS), so we route through
-  // the same Apps Script URL you use for Sheets logging.
-  // Add the doPost() ziina branch shown in the comment block below.
+  // ── ZIINA PAYMENT API ────────────────────────────────────────────────────
+  const ZIINA_API_KEY = '7k5A5fvms1LnTF3ayxqmX5sINEuL1AiMkOPL1DIk9C4/HB+HMT5iB7kp0d87Kdq1'; // ← paste your key here
+  const ZIINA_API_URL = 'https://api-v2.ziina.com/api/payment_intent';
   const SITE_URL = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
 
   async function createZiinaPayment(amountAED, description) {
     const amountFils = Math.round(amountAED * 100); // AED → fils (1 AED = 100 fils)
-    const fd = new FormData();
-    fd.append('action',       'ziina_pay');
-    fd.append('amount',       String(amountFils));
-    fd.append('message',      description);
-    fd.append('success_url',  SITE_URL + '?payment=success');
-    fd.append('cancel_url',   SITE_URL + '?payment=cancel');
-
-    const resp = await fetch(SHEETS_URL, { method: 'POST', body: fd });
+    const body = {
+      amount: amountFils,
+      currency_code: 'AED',
+      message: description,
+      success_url: SITE_URL + '?payment=success',
+      cancel_url:  SITE_URL + '?payment=cancel',
+      test: false  // set to true for test mode
+    };
+    const resp = await fetch(ZIINA_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${ZIINA_API_KEY}`
+      },
+      body: JSON.stringify(body)
+    });
+    if (!resp.ok) throw new Error('Ziina API error: ' + resp.status);
     const data = await resp.json();
-    if (!data.redirect_url) throw new Error(data.error || 'No redirect_url returned');
-    return data.redirect_url;
+    return data.redirect_url; // redirect customer here
   }
 
   // ── SHIPPING DATA ───────────────────────────────────────────────────────
