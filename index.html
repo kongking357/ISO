@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ISO Boards — Luxury Handcrafted Serving Boards</title>
 <meta name="description" content="ISO Boards. Luxury Handcrafted hardwood serving boards for chefs, occasions, gifts, and the table worth remembering.">
+<link rel="icon" type="image/png" href="assets/navicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -1758,6 +1759,74 @@
     color: var(--text-secondary); line-height: 1.5;
   }
   .om-whatsapp-note svg { flex-shrink: 0; margin-top: 2px; color: #25d366; }
+
+  /* ── SHIPPING SECTION ── */
+  .om-select {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--accent-secondary);
+    border-radius: 8px; padding: 10px 14px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+    color: var(--text-primary); outline: none;
+    transition: border-color 0.18s;
+    width: 100%; cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+  }
+  .om-select:focus { border-color: var(--accent-primary); }
+  .om-select option { background: #111; color: var(--text-primary); }
+
+  .om-shipping-options {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .om-shipping-options.visible { display: flex; }
+
+  .om-shipping-option {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 14px;
+    border: 1px solid var(--accent-secondary);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.18s;
+    background: rgba(255,255,255,0.01);
+  }
+  .om-shipping-option:hover { border-color: var(--accent-primary); background: rgba(255,255,255,0.03); }
+  .om-shipping-option.active {
+    border-color: var(--lux-gold);
+    background: rgba(201,168,76,0.06);
+    box-shadow: 0 0 14px rgba(201,168,76,0.1);
+  }
+  .om-shipping-option-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    border: 1px solid var(--accent-primary);
+    flex-shrink: 0; transition: all 0.18s;
+  }
+  .om-shipping-option.active .om-shipping-option-dot {
+    background: var(--lux-gold); border-color: var(--lux-gold);
+    box-shadow: 0 0 8px rgba(201,168,76,0.5);
+  }
+  .om-shipping-info { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+  .om-shipping-name {
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+    font-weight: 600; letter-spacing: 0.03em; color: var(--text-primary);
+  }
+  .om-shipping-time {
+    font-family: 'Space Mono', monospace; font-size: 0.72rem;
+    letter-spacing: 0.08em; color: var(--text-secondary);
+  }
+  .om-shipping-price {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem;
+    letter-spacing: 0.08em; color: var(--lux-gold);
+    white-space: nowrap;
+  }
+  .om-shipping-free {
+    color: #4caf50;
+  }
 </style>
 </head>
 <body>
@@ -2059,6 +2128,73 @@
           <input class="om-input" id="om-name" type="text" placeholder="Your name" autocomplete="name">
         </div>
         <div class="om-field">
+          <label class="om-field-label">Delivery Country</label>
+          <select class="om-select" id="om-country">
+            <option value="">— Select country —</option>
+            <optgroup label="UAE (Domestic)">
+              <option value="UAE">United Arab Emirates</option>
+            </optgroup>
+            <optgroup label="GCC">
+              <option value="Saudi Arabia">Saudi Arabia</option>
+              <option value="Qatar">Qatar</option>
+              <option value="Bahrain">Bahrain</option>
+              <option value="Kuwait">Kuwait</option>
+              <option value="Oman">Oman</option>
+            </optgroup>
+            <optgroup label="North America">
+              <option value="Canada">Canada</option>
+              <option value="USA">USA</option>
+              <option value="Mexico">Mexico</option>
+            </optgroup>
+            <optgroup label="Europe">
+              <option value="Germany">Germany</option>
+              <option value="Italy">Italy</option>
+              <option value="France">France</option>
+              <option value="UK">United Kingdom</option>
+              <option value="Spain">Spain</option>
+              <option value="Netherlands">Netherlands</option>
+              <option value="Other Europe">Other European Country</option>
+            </optgroup>
+            <optgroup label="Asia">
+              <option value="India">India</option>
+              <option value="Pakistan">Pakistan</option>
+              <option value="Bangladesh">Bangladesh</option>
+              <option value="Sri Lanka">Sri Lanka</option>
+              <option value="Other Asia">Other Asian Country</option>
+            </optgroup>
+            <optgroup label="Middle East">
+              <option value="Jordan">Jordan</option>
+              <option value="Lebanon">Lebanon</option>
+              <option value="Egypt">Egypt</option>
+              <option value="Iraq">Iraq</option>
+              <option value="Other Middle East">Other Middle East Country</option>
+            </optgroup>
+            <optgroup label="Africa">
+              <option value="Nigeria">Nigeria</option>
+              <option value="Kenya">Kenya</option>
+              <option value="South Africa">South Africa</option>
+              <option value="Other Africa">Other African Country</option>
+            </optgroup>
+            <optgroup label="Other">
+              <option value="Australia">Australia</option>
+              <option value="New Zealand">New Zealand</option>
+              <option value="Japan">Japan</option>
+              <option value="China">China</option>
+              <option value="Other">Other Country</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="om-field">
+          <label class="om-field-label">Delivery Address</label>
+          <input class="om-input" id="om-address" type="text" placeholder="Street, city, postal code" autocomplete="street-address">
+        </div>
+        <div class="om-field" id="om-shipping-field" style="display:none;">
+          <label class="om-field-label">Shipping Method</label>
+          <div class="om-shipping-options visible" id="om-shipping-options">
+            <!-- populated by JS -->
+          </div>
+        </div>
+        <div class="om-field">
           <label class="om-field-label">Note <span style="opacity:0.4">(optional)</span></label>
           <input class="om-input" id="om-note" type="text" placeholder="Any special requests or engraving details">
         </div>
@@ -2067,6 +2203,7 @@
       <div class="om-order-summary" id="om-order-summary">
         <div class="om-summary-row"><span>Product</span><span id="om-sum-product">—</span></div>
         <div class="om-summary-row"><span>Quantity</span><span id="om-sum-qty">—</span></div>
+        <div class="om-summary-row"><span>Shipping</span><span id="om-sum-shipping">—</span></div>
         <div class="om-summary-row om-summary-total"><span>Total</span><span id="om-sum-total">—</span></div>
       </div>
 
@@ -2942,7 +3079,14 @@
     const totalText = omQty === 1 ? '$174.00' : omQty === 2 ? '10% discount applied' : 'Special deal — via WhatsApp';
     omSumProduct.textContent = omSelectedProduct;
     omSumQty.textContent     = omQty + (omQty === 1 ? ' board' : ' boards');
-    omSumTotal.textContent   = omQty === 1 ? '$174.00' : omQty === 2 ? '10% off — see Ziina' : 'Contact for pricing';
+    omSumTotal.textContent   = omQty === 1 ? 'AED 174' : omQty === 2 ? 'Contact for 10% off total' : 'Contact for pricing';
+
+    // Reset shipping selection when entering step 2
+    omSelectedShipping = 'standard';
+    const countryEl = document.getElementById('om-country');
+    countryEl.value = '';
+    document.getElementById('om-shipping-field').style.display = 'none';
+    document.getElementById('om-sum-shipping').textContent = '—';
 
     // If 3+ boards, swap checkout button to WhatsApp
     if (omQty >= 3) {
@@ -2989,111 +3133,372 @@
   async function logToSheets(data) {
     try {
       const fd = new FormData();
-      fd.append('product',      data.product       || '');
-      fd.append('quantity',     String(data.quantity !== undefined ? data.quantity : ''));
-      fd.append('name',         data.name          || '');
-      fd.append('note',         data.note          || '');
-      fd.append('brief',        data.brief         || '');
-      fd.append('fileName',     data.fileName      || '');
+      fd.append('product',        data.product       || '');
+      fd.append('quantity',       String(data.quantity !== undefined ? data.quantity : ''));
+      fd.append('name',           data.name          || '');
+      fd.append('note',           data.note          || '');
+      fd.append('brief',          data.brief         || '');
+      fd.append('fileName',       data.fileName      || '');
+      fd.append('country',        data.country       || '');
+      fd.append('address',        data.address       || '');
+      fd.append('shippingMethod', data.shippingMethod|| '');
+      fd.append('shippingFee',    String(data.shippingFee !== undefined ? data.shippingFee : ''));
       if (data.fileData) {
         fd.append('fileData',     data.fileData);
         fd.append('fileMimeType', data.fileMimeType || 'application/octet-stream');
       }
-      await fetch(SHEETS_URL, { method: 'POST', body: fd, mode: 'no-cors' });
+      await fetch(SHEETS_URL, { method: 'POST', body: fd });
     } catch (e) {
-      // silent fail — never block the purchase flow
       console.warn('logToSheets error:', e);
     }
   }
 
   /*
-   * ── REQUIRED: update your Google Apps Script to add a doPost() handler ──
+   * ── GOOGLE APPS SCRIPT — replace your existing doPost() with this ──────
+   *
+   * var ZIINA_API_KEY = 'YOUR_ZIINA_API_KEY'; // ← paste your Ziina key here
    *
    * function doPost(e) {
-   *   const params = e.parameter;
-   *   const sheet  = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-   *   let driveUrl = '';
+   *   var params = e.parameter;
    *
-   *   if (params.fileData && params.fileName) {
-   *     const bytes   = Utilities.base64Decode(params.fileData);
-   *     const blob    = Utilities.newBlob(bytes, params.fileMimeType || 'application/octet-stream', params.fileName);
-   *     const folder  = DriveApp.getFolderById('YOUR_DRIVE_FOLDER_ID'); // ← replace with your folder ID
-   *     const driveFile = folder.createFile(blob);
-   *     driveUrl = driveFile.getUrl();
+   *   // ── Branch 1: Ziina payment proxy ──────────────────────────────────
+   *   if (params.action === 'ziina_pay') {
+   *     var payload = {
+   *       amount:       parseInt(params.amount),
+   *       currency_code:'AED',
+   *       message:      params.message      || 'ISO Boards Order',
+   *       success_url:  params.success_url  || '',
+   *       cancel_url:   params.cancel_url   || '',
+   *       test:         false  // set true for test mode
+   *     };
+   *     var options = {
+   *       method:      'post',
+   *       contentType: 'application/json',
+   *       headers:     { Authorization: 'Bearer ' + ZIINA_API_KEY },
+   *       payload:     JSON.stringify(payload),
+   *       muteHttpExceptions: true
+   *     };
+   *     var resp = UrlFetchApp.fetch('https://api-v2.ziina.com/api/payment_intent', options);
+   *     var body = JSON.parse(resp.getContentText());
+   *     return ContentService
+   *       .createTextOutput(JSON.stringify({ redirect_url: body.redirect_url || null, error: body.message || null }))
+   *       .setMimeType(ContentService.MimeType.JSON);
    *   }
    *
+   *   // ── Branch 2: Log order to Sheets ──────────────────────────────────
+   *   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+   *   var driveUrl = '';
+   *   if (params.fileData && params.fileName) {
+   *     var bytes     = Utilities.base64Decode(params.fileData);
+   *     var blob      = Utilities.newBlob(bytes, params.fileMimeType || 'application/octet-stream', params.fileName);
+   *     var folder    = DriveApp.getFolderById('YOUR_DRIVE_FOLDER_ID');
+   *     var driveFile = folder.createFile(blob);
+   *     driveUrl = driveFile.getUrl();
+   *   }
    *   sheet.appendRow([
    *     new Date().toISOString(),
-   *     params.product  || '',
-   *     params.quantity || '',
-   *     params.name     || '',
-   *     params.note     || '',
-   *     params.brief    || '',
-   *     params.fileName || '',
-   *     driveUrl                // Google Drive link in its own column
+   *     params.product        || '',
+   *     params.quantity       || '',
+   *     params.name           || '',
+   *     params.country        || '',
+   *     params.address        || '',
+   *     params.shippingMethod || '',
+   *     params.shippingFee    || '',
+   *     params.note           || '',
+   *     params.brief          || '',
+   *     params.fileName       || '',
+   *     driveUrl
    *   ]);
-   *
    *   return ContentService
    *     .createTextOutput(JSON.stringify({ status: 'ok' }))
    *     .setMimeType(ContentService.MimeType.JSON);
    * }
    */
 
+  // ── ZIINA PAYMENT — proxied through your Google Apps Script ─────────────
+  // Ziina's API blocks direct browser calls (CORS), so we route through
+  // the same Apps Script URL you use for Sheets logging.
+  // Add the doPost() ziina branch shown in the comment block below.
+  const SITE_URL = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
+
+  async function createZiinaPayment(amountAED, description) {
+    const amountFils = Math.round(amountAED * 100); // AED → fils (1 AED = 100 fils)
+    const fd = new FormData();
+    fd.append('action',       'ziina_pay');
+    fd.append('amount',       String(amountFils));
+    fd.append('message',      description);
+    fd.append('success_url',  SITE_URL + '?payment=success');
+    fd.append('cancel_url',   SITE_URL + '?payment=cancel');
+
+    const resp = await fetch(SHEETS_URL, { method: 'POST', body: fd });
+    const data = await resp.json();
+    if (!data.redirect_url) throw new Error(data.error || 'No redirect_url returned');
+    return data.redirect_url;
+  }
+
+  // ── SHIPPING DATA ───────────────────────────────────────────────────────
+  const SHIPPING = {
+    // UAE domestic
+    'UAE': {
+      standard: { label: 'Standard Delivery', price: 0,  priceLabel: 'FREE', time: 'Within 5 working days' },
+      express:  { label: 'Express Delivery',  price: 70, priceLabel: 'AED 70', time: 'Within 2 working days' }
+    },
+    // GCC
+    'Saudi Arabia': {
+      standard: { label: 'Express',  price: 118, priceLabel: 'AED 118', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 305, priceLabel: 'AED 305', time: 'Within 9 days' }
+    },
+    'Qatar': {
+      standard: { label: 'Express',  price: 135, priceLabel: 'AED 135', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 days' }
+    },
+    'Bahrain': {
+      standard: { label: 'Express',  price: 118, priceLabel: 'AED 118', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 days' }
+    },
+    'Kuwait': {
+      standard: { label: 'Express',  price: 120, priceLabel: 'AED 120', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 days' }
+    },
+    'Oman': {
+      standard: { label: 'Express',  price: 123, priceLabel: 'AED 123', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 297, priceLabel: 'AED 297', time: 'Within 9 days' }
+    },
+    // North America
+    'Canada': {
+      standard: { label: 'Express',  price: 230, priceLabel: 'AED 230', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 432, priceLabel: 'AED 432', time: 'Within 9 days' }
+    },
+    'USA': {
+      standard: { label: 'Express',  price: 265, priceLabel: 'AED 265', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 432, priceLabel: 'AED 432', time: 'Within 9 days' }
+    },
+    'Mexico': {
+      standard: { label: 'Express',  price: 248, priceLabel: 'AED 248', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 432, priceLabel: 'AED 432', time: 'Within 9 days' }
+    },
+    // Europe
+    'Germany': {
+      standard: { label: 'Express',  price: 195, priceLabel: 'AED 195', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 386, priceLabel: 'AED 386', time: 'Within 9 days' }
+    },
+    'Italy': {
+      standard: { label: 'Express',  price: 190, priceLabel: 'AED 190', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 386, priceLabel: 'AED 386', time: 'Within 9 days' }
+    },
+    'France': {
+      standard: { label: 'Express',  price: 205, priceLabel: 'AED 205', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 298, priceLabel: 'AED 298', time: 'Within 9 days' }
+    },
+    'UK': {
+      standard: { label: 'Express',  price: 197, priceLabel: 'AED 197', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 357, priceLabel: 'AED 357', time: 'Within 9 days' }
+    },
+    'Spain': {
+      standard: { label: 'Express',  price: 197, priceLabel: 'AED 197', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 357, priceLabel: 'AED 357', time: 'Within 9 days' }
+    },
+    'Netherlands': {
+      standard: { label: 'Express',  price: 197, priceLabel: 'AED 197', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 357, priceLabel: 'AED 357', time: 'Within 9 days' }
+    },
+    'Other Europe': {
+      standard: { label: 'Express',  price: 197, priceLabel: 'AED 197', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 357, priceLabel: 'AED 357', time: 'Within 9 days' }
+    },
+    // Asia — use India as baseline
+    'India': {
+      standard: { label: 'Express',  price: 160, priceLabel: 'AED 160', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 294, priceLabel: 'AED 294', time: 'Within 9 days' }
+    },
+    'Pakistan': {
+      standard: { label: 'Express',  price: 160, priceLabel: 'AED 160', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 294, priceLabel: 'AED 294', time: 'Within 9 days' }
+    },
+    'Bangladesh': {
+      standard: { label: 'Express',  price: 160, priceLabel: 'AED 160', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 294, priceLabel: 'AED 294', time: 'Within 9 days' }
+    },
+    'Sri Lanka': {
+      standard: { label: 'Express',  price: 160, priceLabel: 'AED 160', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 294, priceLabel: 'AED 294', time: 'Within 9 days' }
+    },
+    'Other Asia': {
+      standard: { label: 'Express',  price: 160, priceLabel: 'AED 160', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 294, priceLabel: 'AED 294', time: 'Within 9 days' }
+    },
+    // Middle East — use avg of Kuwait/Qatar/Bahrain
+    'Jordan': {
+      standard: { label: 'Express',  price: 123, priceLabel: 'AED 123', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 297, priceLabel: 'AED 297', time: 'Within 9 days' }
+    },
+    'Lebanon': {
+      standard: { label: 'Express',  price: 123, priceLabel: 'AED 123', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 297, priceLabel: 'AED 297', time: 'Within 9 days' }
+    },
+    'Egypt': {
+      standard: { label: 'Express',  price: 123, priceLabel: 'AED 123', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 297, priceLabel: 'AED 297', time: 'Within 9 days' }
+    },
+    'Iraq': {
+      standard: { label: 'Express',  price: 123, priceLabel: 'AED 123', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 297, priceLabel: 'AED 297', time: 'Within 9 days' }
+    },
+    'Other Middle East': {
+      standard: { label: 'Express',  price: 123, priceLabel: 'AED 123', time: 'Within 13 days' },
+      express:  { label: 'Premium', price: 297, priceLabel: 'AED 297', time: 'Within 9 days' }
+    },
+    // Africa — use Kuwait rates
+    'Nigeria':      { standard: { label: 'Express', price: 120, priceLabel: 'AED 120', time: 'Within 13 days' }, express: { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 days' } },
+    'Kenya':        { standard: { label: 'Express', price: 120, priceLabel: 'AED 120', time: 'Within 13 days' }, express: { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 days' } },
+    'South Africa': { standard: { label: 'Express', price: 120, priceLabel: 'AED 120', time: 'Within 13 days' }, express: { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 days' } },
+    'Other Africa': { standard: { label: 'Express', price: 120, priceLabel: 'AED 120', time: 'Within 13 days' }, express: { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 days' } },
+    // Other / default
+    'Australia':    { standard: { label: 'Express', price: 230, priceLabel: 'AED 230', time: 'Within 13 days' }, express: { label: 'Premium', price: 386, priceLabel: 'AED 386', time: 'Within 9 days' } },
+    'New Zealand':  { standard: { label: 'Express', price: 230, priceLabel: 'AED 230', time: 'Within 13 days' }, express: { label: 'Premium', price: 386, priceLabel: 'AED 386', time: 'Within 9 days' } },
+    'Japan':        { standard: { label: 'Express', price: 180, priceLabel: 'AED 180', time: 'Within 13 days' }, express: { label: 'Premium', price: 340, priceLabel: 'AED 340', time: 'Within 9 days' } },
+    'China':        { standard: { label: 'Express', price: 180, priceLabel: 'AED 180', time: 'Within 13 days' }, express: { label: 'Premium', price: 340, priceLabel: 'AED 340', time: 'Within 9 days' } },
+    'Other':        { standard: { label: 'Express', price: 200, priceLabel: 'AED 200', time: 'Within 13 days' }, express: { label: 'Premium', price: 370, priceLabel: 'AED 370', time: 'Within 9 days' } },
+  };
+
+  let omSelectedShipping = 'standard'; // 'standard' or 'express'
+
+  function getShippingRates(country) {
+    return SHIPPING[country] || SHIPPING['Other'];
+  }
+
+  function renderShippingOptions(country) {
+    const field = document.getElementById('om-shipping-field');
+    const container = document.getElementById('om-shipping-options');
+    if (!country) { field.style.display = 'none'; return; }
+    field.style.display = '';
+
+    const rates = getShippingRates(country);
+    const isUAE = country === 'UAE';
+
+    container.innerHTML = ['standard', 'express'].map(type => {
+      const r = rates[type];
+      const isActive = omSelectedShipping === type;
+      const priceHtml = r.price === 0
+        ? `<span class="om-shipping-price om-shipping-free">FREE</span>`
+        : `<span class="om-shipping-price">${r.priceLabel}</span>`;
+      return `
+        <div class="om-shipping-option${isActive ? ' active' : ''}" data-type="${type}">
+          <div class="om-shipping-option-dot"></div>
+          <div class="om-shipping-info">
+            <div class="om-shipping-name">${r.label}</div>
+            <div class="om-shipping-time">${r.time}</div>
+          </div>
+          ${priceHtml}
+        </div>`;
+    }).join('');
+
+    container.querySelectorAll('.om-shipping-option').forEach(el => {
+      el.addEventListener('click', () => {
+        omSelectedShipping = el.dataset.type;
+        container.querySelectorAll('.om-shipping-option').forEach(x => x.classList.remove('active'));
+        el.classList.add('active');
+        updateSummaryShipping();
+      });
+    });
+
+    updateSummaryShipping();
+  }
+
+  function updateSummaryShipping() {
+    const country = document.getElementById('om-country').value;
+    const sumShipping = document.getElementById('om-sum-shipping');
+    const sumTotal    = document.getElementById('om-sum-total');
+    if (!country || !sumShipping) return;
+    const rates = getShippingRates(country);
+    const r = rates[omSelectedShipping];
+    sumShipping.textContent = r.price === 0 ? 'FREE' : r.priceLabel;
+    // update total with shipping
+    const basePrice = omQty === 1 ? 174 : omQty === 2 ? 174 * 2 * 0.9 : null;
+    if (basePrice !== null) {
+      const total = basePrice + r.price;
+      sumTotal.textContent = `AED ${total.toFixed(0)}`;
+    }
+  }
+
+  document.getElementById('om-country').addEventListener('change', function() {
+    omSelectedShipping = 'standard';
+    renderShippingOptions(this.value);
+  });
+
   // Checkout / WhatsApp
   omCheckoutBtn.addEventListener('click', async () => {
     const name     = document.getElementById('om-name').value.trim();
     const note     = document.getElementById('om-note').value.trim();
+    const country  = document.getElementById('om-country').value.trim();
+    const address  = document.getElementById('om-address').value.trim();
     const brief    = document.getElementById('om-custom-brief') ? document.getElementById('om-custom-brief').value.trim() : '';
     const file     = (rootsFileInput && rootsFileInput.files[0]) ? rootsFileInput.files[0] : null;
     const fileName = file ? file.name : '';
 
+    // Determine selected shipping
+    const shippingRates  = country ? getShippingRates(country) : null;
+    const shippingData   = shippingRates ? shippingRates[omSelectedShipping] : null;
+    const shippingMethod = shippingData ? shippingData.label : '';
+    const shippingFee    = shippingData ? shippingData.price : 0;
+
     // Show loading state
     const originalHTML = omCheckoutBtn.innerHTML;
-    omCheckoutBtn.innerHTML = 'Saving…';
+    omCheckoutBtn.innerHTML = 'Processing…';
     omCheckoutBtn.disabled = true;
 
     // Read file as base64 if one was attached
-    let fileData     = '';
-    let fileMimeType = '';
+    let fileData = '', fileMimeType = '';
     if (file) {
-      try {
-        fileData     = await fileToBase64(file);
-        fileMimeType = file.type || 'application/octet-stream';
-      } catch (e) {
-        console.warn('Could not read attached file:', e);
-      }
+      try { fileData = await fileToBase64(file); fileMimeType = file.type || 'application/octet-stream'; }
+      catch (e) { console.warn('Could not read attached file:', e); }
     }
 
-    // Log to Google Sheets + upload file to Drive
+    // Log to Google Sheets
     await logToSheets({
-      product:      omSelectedProduct,
-      quantity:     omQty,
-      name:         name     || '',
-      note:         note     || '',
-      brief:        brief    || '',
-      fileName:     fileName || '',
-      fileData:     fileData,
-      fileMimeType: fileMimeType
+      product: omSelectedProduct, quantity: omQty,
+      name: name || '', note: note || '', brief: brief || '',
+      fileName: fileName || '', fileData, fileMimeType,
+      country: country || '', address: address || '',
+      shippingMethod, shippingFee
     });
 
-    // Restore button
-    omCheckoutBtn.innerHTML = originalHTML;
-    omCheckoutBtn.disabled  = false;
-
     if (omQty >= 3) {
+      // 3+ boards → WhatsApp
       const msg = encodeURIComponent(
         `Hi ISO Boards! I'd like to order ${omQty}x ${omSelectedProduct}.` +
-        (name     ? `\nName: ${name}`                : '') +
-        (brief    ? `\nDesign Brief: ${brief}`        : '') +
-        (fileName ? `\nHandwriting file: ${fileName}` : '') +
-        (note     ? `\nNote: ${note}`                 : '')
+        (name           ? `\nName: ${name}`                         : '') +
+        (country        ? `\nCountry: ${country}`                   : '') +
+        (address        ? `\nAddress: ${address}`                   : '') +
+        (shippingMethod ? `\nShipping: ${shippingMethod} (${shippingFee === 0 ? 'FREE' : 'AED ' + shippingFee})` : '') +
+        (brief          ? `\nDesign Brief: ${brief}`                : '') +
+        (fileName       ? `\nHandwriting file: ${fileName}`         : '') +
+        (note           ? `\nNote: ${note}`                         : '')
       );
+      omCheckoutBtn.innerHTML = originalHTML;
+      omCheckoutBtn.disabled  = false;
       window.open(`${WA_LINK}&text=${msg}`, '_blank');
-    } else {
-      const link = omQty === 2 ? ZIINA_2 : ZIINA_1;
-      window.open(link, '_blank');
+      omCloseModal();
+      return;
     }
-    omCloseModal();
+
+    // 1-2 boards → Ziina Payment Intent API
+    try {
+      const boardPrice = omQty === 1 ? 174 : 174 * 2 * 0.9; // 10% off for 2
+      const totalAED   = boardPrice + shippingFee;
+      const description = `ISO Boards — ${omQty}x ${omSelectedProduct}${shippingMethod ? ' · ' + shippingMethod : ''}`;
+
+      const redirectUrl = await createZiinaPayment(totalAED, description);
+      omCheckoutBtn.innerHTML = originalHTML;
+      omCheckoutBtn.disabled  = false;
+      omCloseModal();
+      window.location.href = redirectUrl; // redirect to Ziina payment page
+    } catch (err) {
+      console.error('Payment error:', err);
+      omCheckoutBtn.innerHTML = '⚠ Payment Error — Try Again';
+      omCheckoutBtn.disabled  = false;
+      setTimeout(() => { omCheckoutBtn.innerHTML = originalHTML; }, 3000);
+    }
   });
 
   window.addEventListener('resize', setBoardPose);
