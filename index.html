@@ -3156,33 +3156,35 @@
     omStep2.style.display = 'none';
     omStep1.style.display = 'block';
   });
-async function createZiinaPayment(amount, message, currency = 'USD') {
-  // We use URLSearchParams so the Google Script can read the 'action' and 'amount'
-  const params = new URLSearchParams();
-  params.append('action', 'ziina_pay');
-  params.append('amount', amount);
-  params.append('currency', currency);
-  params.append('message', message);
-  params.append('success_url', window.location.origin + '/success.html');
-  params.append('cancel_url', window.location.href);
 
-  const response = await fetch(SHEETS_URL, {
-    method: 'POST',
-    body: params,
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
-  });
-
-  const data = await response.json();
-
-  if (data.error) {
-    throw new Error(data.error);
-  }
-
-  return data.redirect_url;
-}
   const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzaaGoIKgkg_ZqwvBUC7oYG77mxvZ86vH8QVJUHd_8ojvtZce6_Hvofxbgo0mcfeurK4w/exec';
+
+  async function createZiinaPayment(amount, message, currency = 'USD') {
+    // We use URLSearchParams so the Google Script can read the 'action' and 'amount'
+    const params = new URLSearchParams();
+    params.append('action', 'ziina_pay');
+    params.append('amount', amount);
+    params.append('currency', currency);
+    params.append('message', message);
+    params.append('success_url', window.location.origin + '/success.html');
+    params.append('cancel_url', window.location.href);
+
+    const response = await fetch(SHEETS_URL, {
+      method: 'POST',
+      body: params,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    });
+
+    const data = await response.json();
+
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    return data.redirect_url;
+  }
 
   // File chosen display
   if (rootsFileInput) {
