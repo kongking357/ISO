@@ -3449,7 +3449,10 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
     }
 
     // Log to Google Sheets
-    const paymentCurrency = (document.getElementById('om-pay-currency') || {}).value || 'USD';
+    const activeCurrencyBtn = document.querySelector('.om-pay-currency-btn.active');
+    const paymentCurrency = (activeCurrencyBtn ? activeCurrencyBtn.dataset.cur : null)
+      || (document.getElementById('om-pay-currency') || {}).value
+      || 'USD';
     await logToSheets({
       product: omSelectedProduct, quantity: omQty,
       name: name || '', note: note || '', brief: brief || '',
@@ -3484,7 +3487,6 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
       const shippingUSD = aedToUsd(shippingFee);
       const totalUSD = boardUSD + shippingUSD;
       const totalAED = Math.round(boardUSD * AED_RATE) + shippingFee;
-      const paymentCurrency = (document.getElementById('om-pay-currency') || {}).value || 'USD';
       const paymentAmount = paymentCurrency === 'AED' ? totalAED : totalUSD;
       const description = `ISO Boards — ${omQty}x ${omSelectedProduct}${shippingMethod ? ' · ' + shippingMethod : ''}`;
 
