@@ -2122,7 +2122,7 @@
       <div class="om-fields">
         <div class="om-field">
           <label class="om-field-label">Payment Currency</label>
-          <select class="om-select" id="om-pay-currency" style="width:100%; background:#111; color:#fff; border:1px solid #333; padding:10px; border-radius:4px; margin-bottom:15px;">
+          <select class="om-select" id="om-pay-currency" style="width:100%; background:#111; color:#fff; border:1px solid #333; padding:12px; border-radius:4px; margin-bottom:15px;">
             <option value="USD">USD ($)</option>
             <option value="AED">AED (د.إ)</option>
           </select>
@@ -3487,10 +3487,8 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
 
     // 1-2 boards → Ziina Payment Intent API
     try {
-      const activeCurrencyBtn = document.querySelector('.om-pay-currency-btn.active');
-      const paymentCurrency = (activeCurrencyBtn ? activeCurrencyBtn.dataset.cur : null)
-        || (document.getElementById('om-pay-currency') || {}).value
-        || 'USD';
+      const currencyEl = document.getElementById('om-pay-currency');
+      const paymentCurrency = (currencyEl ? currencyEl.value : 'USD') || 'USD';
 
       const USD_PER_AED = 1 / 3.6725;
       const boardPriceUSD = omQty === 1 ? 174 : 174 * 2 * 0.9; // 10% off for 2
