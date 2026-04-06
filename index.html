@@ -3105,11 +3105,12 @@
     omStep2.style.display = 'none';
     omStep1.style.display = 'block';
   });
-async function createZiinaPayment(amount, message) {
+async function createZiinaPayment(amount, message, currency = 'USD') {
   // We use URLSearchParams so the Google Script can read the 'action' and 'amount'
   const params = new URLSearchParams();
   params.append('action', 'ziina_pay');
   params.append('amount', amount);
+  params.append('currency', currency);
   params.append('message', message);
   params.append('success_url', window.location.origin + '/success.html');
   params.append('cancel_url', window.location.href);
@@ -3211,29 +3212,6 @@ async function createZiinaPayment(amount, message) {
   const ZIINA_API_KEY = '7k5A5fvms1LnTF3ayxqmX5sINEuL1AiMkOPL1DIk9C4/HB+HMT5iB7kp0d87Kdq1'; // ← paste your key here
   const ZIINA_API_URL = 'https://api-v2.ziina.com/api/payment_intent';
   const SITE_URL = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
-
-  async function createZiinaPayment(amountAED, description) {
-    const amountFils = Math.round(amountAED * 100); // AED → fils (1 AED = 100 fils)
-    const body = {
-      amount: amountFils,
-      currency_code: 'AED',
-      message: description,
-      success_url: SITE_URL + '?payment=success',
-      cancel_url:  SITE_URL + '?payment=cancel',
-      test: false  // set to true for test mode
-    };
-    const resp = await fetch(ZIINA_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${ZIINA_API_KEY}`
-      },
-      body: JSON.stringify(body)
-    });
-    if (!resp.ok) throw new Error('Ziina API error: ' + resp.status);
-    const data = await resp.json();
-    return data.redirect_url; // redirect customer here
-  }
 
   // ── SHIPPING DATA ───────────────────────────────────────────────────────
   const SHIPPING = {
@@ -3483,11 +3461,24 @@ async function createZiinaPayment(amount, message) {
 
     // 1-2 boards → Ziina Payment Intent API
     try {
-      const boardPrice = omQty === 1 ? 174 : 174 * 2 * 0.9; // 10% off for 2
-      const totalAED   = boardPrice + shippingFee;
+      const activeCurrencyBtn = document.querySelector('.om-pay-currency-btn.active');
+      const paymentCurrency = (activeCurrencyBtn ? activeCurrencyBtn.dataset.cur : null)
+        || (document.getElementById('om-pay-currency') || {}).value
+        || 'USD';
+
+      const USD_PER_AED = 1 / 3.6725;
+      const boardPriceUSD = omQty === 1 ? 174 : 174 * 2 * 0.9; // 10% off for 2
+      const boardPriceAED = Math.round(boardPriceUSD * 3.6725 * 100) / 100;
+      // shippingFee is always in AED
+      const shippingUSD = Math.round(shippingFee * USD_PER_AED * 100) / 100;
+
+      const totalUSD = Math.round((boardPriceUSD + shippingUSD) * 100) / 100;
+      const totalAED = Math.round((boardPriceAED + shippingFee) * 100) / 100;
+
+      const paymentAmount = paymentCurrency === 'AED' ? totalAED : totalUSD;
       const description = `ISO Boards — ${omQty}x ${omSelectedProduct}${shippingMethod ? ' · ' + shippingMethod : ''}`;
 
-      const redirectUrl = await createZiinaPayment(totalAED, description);
+      const redirectUrl = await createZiinaPayment(paymentAmount, description, paymentCurrency);
       omCheckoutBtn.innerHTML = originalHTML;
       omCheckoutBtn.disabled  = false;
       omCloseModal();
