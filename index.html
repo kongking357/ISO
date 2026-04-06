@@ -1824,58 +1824,6 @@
   .om-shipping-free {
     color: #4caf50;
   }
-
-  /* ── CURRENCY SELECTOR ── */
-  .om-currency-field {
-    display: flex; flex-direction: column; gap: 7px;
-    margin-bottom: 16px;
-  }
-  .om-currency-label {
-    font-family: 'Space Mono', monospace; font-size: 0.58rem;
-    letter-spacing: 0.16em; color: var(--status-label); text-transform: uppercase;
-  }
-  .om-currency-btns {
-    display: flex; gap: 8px;
-  }
-  .om-pay-currency-btn {
-    flex: 1; padding: 10px 14px;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    font-family: 'Space Mono', monospace; font-size: 0.68rem;
-    letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--text-secondary);
-    background: rgba(255,255,255,0.02);
-    border: 1px solid var(--accent-secondary);
-    border-radius: 10px; cursor: pointer;
-    transition: all 0.18s;
-  }
-  .om-pay-currency-btn:hover { border-color: var(--accent-primary); color: var(--text-primary); }
-  .om-pay-currency-btn.active {
-    border-color: var(--lux-gold);
-    background: rgba(201,168,76,0.1);
-    color: var(--text-primary);
-    box-shadow: 0 0 16px rgba(201,168,76,0.14);
-  }
-  .om-pay-currency-btn .cur-flag {
-    font-size: 1rem; line-height: 1;
-  }
-  .om-pay-currency-btn .cur-total {
-    font-size: 0.56rem;
-    color: var(--lux-gold);
-    letter-spacing: 0.08em;
-    margin-top: 1px;
-    display: block;
-    white-space: nowrap;
-  }
-  .om-pay-currency-btn.active .cur-total { color: var(--lux-gold-bright); }
-
-  /* dual-price display in qty summary */
-  .om-dual-price {
-    display: flex; flex-direction: column; gap: 1px;
-    font-family: 'Space Mono', monospace; font-size: 0.62rem;
-    letter-spacing: 0.09em; color: var(--text-secondary);
-  }
-  .om-dual-price .dp-aed { color: var(--lux-gold); }
-  .om-dual-price .dp-usd { color: var(--text-secondary); font-size: 0.56rem; }
 </style>
 </head>
 <body>
@@ -2254,27 +2202,6 @@
         <div class="om-summary-row"><span>Quantity</span><span id="om-sum-qty">—</span></div>
         <div class="om-summary-row"><span>Shipping</span><span id="om-sum-shipping">—</span></div>
         <div class="om-summary-row om-summary-total"><span>Total</span><span id="om-sum-total">—</span></div>
-      </div>
-
-      <!-- CURRENCY SELECTOR -->
-      <div class="om-currency-field" id="om-currency-field">
-        <div class="om-currency-label">Pay in</div>
-        <div class="om-currency-btns">
-          <button class="om-pay-currency-btn active" data-cur="AED" id="om-cur-aed">
-            <span class="cur-flag">🇦🇪</span>
-            <span>
-              AED
-              <span class="cur-total" id="cur-total-aed">AED —</span>
-            </span>
-          </button>
-          <button class="om-pay-currency-btn" data-cur="USD" id="om-cur-usd">
-            <span class="cur-flag">🇺🇸</span>
-            <span>
-              USD
-              <span class="cur-total" id="cur-total-usd">$ —</span>
-            </span>
-          </button>
-        </div>
       </div>
 
       <div class="om-step2-btns">
@@ -3056,26 +2983,14 @@
   const rootsFileInput = document.getElementById('om-roots-file');
   const fileChosen     = document.getElementById('om-file-chosen');
 
-  const USD_PER_AED = 1 / 3.6725;
-  const BOARD_PRICE_USD = 174;
-  const BOARD_PRICE_AED = Math.round(BOARD_PRICE_USD * 3.6725);
-
-  function fmtDual(aed, usd) {
-    return `AED ${Math.round(aed)} · $${usd.toFixed(2)}`;
-  }
-
   function omUpdateQtyUI() {
     omQtyVal.textContent = omQty;
-    const singleAED = BOARD_PRICE_AED;
-    const singleUSD = BOARD_PRICE_USD;
-    const twoAED    = Math.round(BOARD_PRICE_AED * 2 * 0.9);
-    const twoUSD    = (BOARD_PRICE_USD * 2 * 0.9).toFixed(2);
     if (omQty === 1) {
-      omQtySummary.textContent = `1 board — AED ${singleAED} · $${singleUSD}`;
-      omPricingNote.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Single board — AED ' + singleAED + ' ($' + singleUSD + ')';
+      omQtySummary.textContent = '1 board — $174.00';
+      omPricingNote.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Single board — $174.00';
     } else if (omQty === 2) {
-      omQtySummary.textContent = `2 boards — 10% off`;
-      omPricingNote.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 2 boards — AED ' + twoAED + ' ($' + twoUSD + ') · 10% off';
+      omQtySummary.textContent = '2 boards — 10% off';
+      omPricingNote.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 2 boards — 10% discount applied';
     } else {
       omQtySummary.textContent = omQty + ' boards — special pricing';
       omPricingNote.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 3+ boards — we\'ll arrange a special deal on WhatsApp';
@@ -3156,54 +3071,12 @@
   omQtyPlus.addEventListener('click',  () => { omQty++; omUpdateQtyUI(); });
 
   // Step 1 → Step 2
-  let omSelectedCurrency = 'AED';
-
-  function updateCurrencyTotals() {
-    const country = document.getElementById('om-country').value;
-    const shippingRates = country ? getShippingRates(country) : null;
-    const shippingData  = shippingRates ? shippingRates[omSelectedShipping] : null;
-    const shippingFeeAED = shippingData ? shippingData.price : 0;
-
-    const boardAED = omQty === 1 ? BOARD_PRICE_AED : omQty === 2 ? Math.round(BOARD_PRICE_AED * 2 * 0.9) : null;
-    const boardUSD = omQty === 1 ? BOARD_PRICE_USD : omQty === 2 ? Math.round(BOARD_PRICE_USD * 2 * 0.9 * 100) / 100 : null;
-    const shippingUSD = Math.round(shippingFeeAED * USD_PER_AED * 100) / 100;
-
-    const totalAED = boardAED !== null ? boardAED + shippingFeeAED : null;
-    const totalUSD = boardUSD !== null ? Math.round((boardUSD + shippingUSD) * 100) / 100 : null;
-
-    const curTotalAED = document.getElementById('cur-total-aed');
-    const curTotalUSD = document.getElementById('cur-total-usd');
-    if (curTotalAED) curTotalAED.textContent = totalAED !== null ? `AED ${totalAED}` : 'AED —';
-    if (curTotalUSD) curTotalUSD.textContent = totalUSD !== null ? `$${totalUSD.toFixed(2)}` : '$ —';
-
-    // Update the summary total row with both currencies
-    const sumTotal = document.getElementById('om-sum-total');
-    if (sumTotal && totalAED !== null) {
-      sumTotal.textContent = `AED ${totalAED}  ·  $${totalUSD.toFixed(2)}`;
-    }
-  }
-
-  // Currency button toggle
-  document.querySelectorAll('.om-pay-currency-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.om-pay-currency-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      omSelectedCurrency = btn.dataset.cur;
-    });
-  });
-
   omNextBtn.addEventListener('click', () => {
     // Update summary
+    const totalText = omQty === 1 ? '$174.00' : omQty === 2 ? '10% discount applied' : 'Special deal — via WhatsApp';
     omSumProduct.textContent = omSelectedProduct;
     omSumQty.textContent     = omQty + (omQty === 1 ? ' board' : ' boards');
-
-    if (omQty >= 3) {
-      omSumTotal.textContent = 'Contact for pricing';
-    } else {
-      const boardAED = omQty === 1 ? BOARD_PRICE_AED : Math.round(BOARD_PRICE_AED * 2 * 0.9);
-      const boardUSD = omQty === 1 ? BOARD_PRICE_USD : Math.round(BOARD_PRICE_USD * 2 * 0.9 * 100) / 100;
-      omSumTotal.textContent = `AED ${boardAED}  ·  $${boardUSD.toFixed ? boardUSD.toFixed(2) : boardUSD}`;
-    }
+    omSumTotal.textContent   = omQty === 1 ? 'AED 174' : omQty === 2 ? 'Contact for 10% off total' : 'Contact for pricing';
 
     // Reset shipping selection when entering step 2
     omSelectedShipping = 'standard';
@@ -3211,13 +3084,6 @@
     countryEl.value = '';
     document.getElementById('om-shipping-field').style.display = 'none';
     document.getElementById('om-sum-shipping').textContent = '—';
-
-    // Show/hide currency selector (only for 1-2 boards)
-    const currencyField = document.getElementById('om-currency-field');
-    if (currencyField) currencyField.style.display = omQty >= 3 ? 'none' : '';
-
-    // Update currency button totals
-    updateCurrencyTotals();
 
     // If 3+ boards, swap checkout button to WhatsApp
     if (omQty >= 3) {
@@ -3490,10 +3356,9 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
     container.innerHTML = ['standard', 'express'].map(type => {
       const r = rates[type];
       const isActive = omSelectedShipping === type;
-      const shippingUSD = Math.round(r.price * USD_PER_AED * 100) / 100;
       const priceHtml = r.price === 0
         ? `<span class="om-shipping-price om-shipping-free">FREE</span>`
-        : `<div style="text-align:right"><span class="om-shipping-price">AED ${r.price}</span><br><span style="font-family:'Space Mono',monospace;font-size:0.58rem;color:var(--text-secondary);letter-spacing:0.08em">$${shippingUSD.toFixed(2)}</span></div>`;
+        : `<span class="om-shipping-price">${r.priceLabel}</span>`;
       return `
         <div class="om-shipping-option${isActive ? ' active' : ''}" data-type="${type}">
           <div class="om-shipping-option-dot"></div>
@@ -3524,21 +3389,13 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
     if (!country || !sumShipping) return;
     const rates = getShippingRates(country);
     const r = rates[omSelectedShipping];
-    const shippingUSD = Math.round(r.price * USD_PER_AED * 100) / 100;
-    if (r.price === 0) {
-      sumShipping.textContent = 'FREE';
-    } else {
-      sumShipping.textContent = `AED ${r.price}  ·  $${shippingUSD.toFixed(2)}`;
+    sumShipping.textContent = r.price === 0 ? 'FREE' : r.priceLabel;
+    // update total with shipping
+    const basePrice = omQty === 1 ? 174 : omQty === 2 ? 174 * 2 * 0.9 : null;
+    if (basePrice !== null) {
+      const total = basePrice + r.price;
+      sumTotal.textContent = `AED ${total.toFixed(0)}`;
     }
-    // update total with shipping (dual currency)
-    const boardAED = omQty === 1 ? BOARD_PRICE_AED : omQty === 2 ? Math.round(BOARD_PRICE_AED * 2 * 0.9) : null;
-    const boardUSD = omQty === 1 ? BOARD_PRICE_USD : omQty === 2 ? Math.round(BOARD_PRICE_USD * 2 * 0.9 * 100) / 100 : null;
-    if (boardAED !== null) {
-      const totalAED = boardAED + r.price;
-      const totalUSD = Math.round((boardUSD + shippingUSD) * 100) / 100;
-      sumTotal.textContent = `AED ${totalAED}  ·  $${totalUSD.toFixed(2)}`;
-    }
-    updateCurrencyTotals();
   }
 
   document.getElementById('om-country').addEventListener('change', function() {
@@ -3604,15 +3461,19 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
 
     // 1-2 boards → Ziina Payment Intent API
     try {
-      const paymentCurrency = omSelectedCurrency || 'AED';
+      const activeCurrencyBtn = document.querySelector('.om-pay-currency-btn.active');
+      const paymentCurrency = (activeCurrencyBtn ? activeCurrencyBtn.dataset.cur : null)
+        || (document.getElementById('om-pay-currency') || {}).value
+        || 'USD';
 
-      const boardPriceUSD = omQty === 1 ? BOARD_PRICE_USD : BOARD_PRICE_USD * 2 * 0.9;
-      const boardPriceAED = omQty === 1 ? BOARD_PRICE_AED : Math.round(BOARD_PRICE_AED * 2 * 0.9);
+      const USD_PER_AED = 1 / 3.6725;
+      const boardPriceUSD = omQty === 1 ? 174 : 174 * 2 * 0.9; // 10% off for 2
+      const boardPriceAED = Math.round(boardPriceUSD * 3.6725 * 100) / 100;
       // shippingFee is always in AED
       const shippingUSD = Math.round(shippingFee * USD_PER_AED * 100) / 100;
 
       const totalUSD = Math.round((boardPriceUSD + shippingUSD) * 100) / 100;
-      const totalAED = boardPriceAED + shippingFee;
+      const totalAED = Math.round((boardPriceAED + shippingFee) * 100) / 100;
 
       const paymentAmount = paymentCurrency === 'AED' ? totalAED : totalUSD;
       const description = `ISO Boards — ${omQty}x ${omSelectedProduct}${shippingMethod ? ' · ' + shippingMethod : ''}`;
