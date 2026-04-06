@@ -2121,6 +2121,13 @@
       <div class="om-section-label">03 // YOUR DETAILS</div>
       <div class="om-fields">
         <div class="om-field">
+          <label class="om-field-label">Payment Currency</label>
+          <select class="om-select" id="om-pay-currency">
+            <option value="USD">USD ($)</option>
+            <option value="AED">AED (د.إ)</option>
+          </select>
+        </div>
+        <div class="om-field">
           <label class="om-field-label">Full Name</label>
           <input class="om-input" id="om-name" type="text" placeholder="Your name" autocomplete="name">
         </div>
@@ -3076,7 +3083,10 @@
     const totalText = omQty === 1 ? '$174.00' : omQty === 2 ? '10% discount applied' : 'Special deal — via WhatsApp';
     omSumProduct.textContent = omSelectedProduct;
     omSumQty.textContent     = omQty + (omQty === 1 ? ' board' : ' boards');
-    omSumTotal.textContent   = omQty === 1 ? 'AED 174' : omQty === 2 ? 'Contact for 10% off total' : 'Contact for pricing';
+    const cur = document.getElementById('om-pay-currency') ? document.getElementById('om-pay-currency').value : 'USD';
+    const symbol = cur === 'USD' ? '$' : 'AED ';
+    const price = cur === 'USD' ? 174 : (174 * 3.6725);
+    omSumTotal.textContent = omQty === 1 ? `${symbol}${price.toFixed(cur === 'USD' ? 2 : 0)}` : omQty === 2 ? 'Contact for 10% off total' : 'Contact for pricing';
 
     // Reset shipping selection when entering step 2
     omSelectedShipping = 'standard';
@@ -3386,21 +3396,37 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
     const country = document.getElementById('om-country').value;
     const sumShipping = document.getElementById('om-sum-shipping');
     const sumTotal    = document.getElementById('om-sum-total');
+    const currency    = document.getElementById('om-pay-currency').value;
+    
     if (!country || !sumShipping) return;
     const rates = getShippingRates(country);
     const r = rates[omSelectedShipping];
-    sumShipping.textContent = r.price === 0 ? 'FREE' : r.priceLabel;
-    // update total with shipping
-    const basePrice = omQty === 1 ? 174 : omQty === 2 ? 174 * 2 * 0.9 : null;
-    if (basePrice !== null) {
-      const total = basePrice + r.price;
-      sumTotal.textContent = `AED ${total.toFixed(0)}`;
+    
+    // Shipping is natively AED. Convert if USD is selected.
+    const USD_PER_AED = 1 / 3.6725;
+    const shippingAED = r.price;
+    const shippingUSD = shippingAED * USD_PER_AED;
+    
+    // Board price is natively USD. Convert if AED is selected.
+    const boardUSD = omQty === 1 ? 174 : omQty === 2 ? (174 * 2 * 0.9) : 0;
+    const boardAED = boardUSD * 3.6725;
+    
+    if (currency === 'USD') {
+      sumShipping.textContent = shippingAED === 0 ? 'FREE' : `$${shippingUSD.toFixed(2)}`;
+      if (boardUSD > 0) sumTotal.textContent = `$${(boardUSD + shippingUSD).toFixed(2)}`;
+    } else {
+      sumShipping.textContent = shippingAED === 0 ? 'FREE' : `AED ${shippingAED.toFixed(0)}`;
+      if (boardAED > 0) sumTotal.textContent = `AED ${(boardAED + shippingAED).toFixed(0)}`;
     }
   }
 
   document.getElementById('om-country').addEventListener('change', function() {
     omSelectedShipping = 'standard';
     renderShippingOptions(this.value);
+  });
+
+  document.getElementById('om-pay-currency').addEventListener('change', function() {
+    updateSummaryShipping();
   });
 
   // Checkout / WhatsApp
