@@ -141,6 +141,33 @@
   [data-theme="light"] .nav-logo-mark .logo-dark { display: none; }
   [data-theme="light"] .nav-logo-mark .logo-light { display: block; }
 
+  .mobile-header {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 12px;
+  }
+  .mobile-logo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .mobile-logo img {
+    width: 130px;
+    height: auto;
+    display: block;
+  }
+  .mobile-toggle-slot {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .mobile-logo .logo-dark { display: block; }
+  .mobile-logo .logo-light { display: none; }
+  [data-theme="light"] .mobile-logo .logo-dark { display: none; }
+  [data-theme="light"] .mobile-logo .logo-light { display: block; }
+
   /* collections block */
   .nav-collections {
     display: flex; flex-direction: column;
@@ -227,6 +254,10 @@
     font-size: clamp(4rem, 7.5vw, 7.5rem);
     line-height: 0.88; letter-spacing: 0.05em;
     color: var(--text-primary); margin-bottom: 6px;
+    max-width: 360px;
+    width: 100%;
+    white-space: normal;
+    overflow-wrap: break-word;
     opacity: 0; animation: fadeUp 0.7s ease 0.2s forwards;
   }
   .hook {
@@ -250,6 +281,10 @@
     font-family: 'Space Mono', monospace; font-size: 0.68rem;
     color: var(--status-label); letter-spacing: 0.1em; margin-bottom: 20px;
     opacity: 0; animation: fadeUp 0.7s ease 0.35s forwards;
+  }
+  .subtitle,
+  .spec-ref {
+    display: none;
   }
   .desc {
     font-size: 0.95rem; color: var(--text-secondary); line-height: 1.85;
@@ -322,10 +357,10 @@
     width: min(840px, 75vw); /* give the board more visual real estate */
     min-height: min(640px, 52vw);
     transform-style: preserve-3d;
-    filter: drop-shadow(0 32px 72px rgba(0,0,0,0.55));
+    filter: drop-shadow(0 40px 90px rgba(0,0,0,0.55));
   }
 [data-theme="light"] .board-wrap {
-    filter: drop-shadow(0 18px 48px rgba(0,0,0,0.32));
+    filter: drop-shadow(0 23px 60px rgba(0,0,0,0.32));
   }
  
   .ann-top, .ann-board-label, .anns-right, .ann-bottom { display: none; }
@@ -498,6 +533,10 @@
     grid-template-columns: minmax(0, 1fr);
     gap: 26px;
     align-items: start;
+  }
+  .rituals-inline {
+    display: none;
+    width: 100%;
   }
   .ritual-grid.single {
     gap: 0;
@@ -815,59 +854,40 @@
       --detail-zoom-rotx: 8deg;
       --detail-zoom-roty: -12deg;
     }
-    html, body { height: auto; overflow-y: auto; }
+    html, body { height: auto; overflow-y: auto; text-size-adjust: 100%; -webkit-text-size-adjust: 100%; }
     nav {
-      position: relative;
-      padding: 12px 14px 10px;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
-    }
-    .nav-logo-mark {
-      width: 140px;
-      height: 44px;
-    }
-    .nav-collections {
-      width: 100%;
-      gap: 8px;
-    }
-    .nav-collections-label {
       display: none;
-    }
-    .nav-links {
-      width: 100%;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-    .nav-links li:first-child a {
-      border-left: 0;
-    }
-    .nav-links a {
-      padding: 7px 10px;
-      border: 1px solid var(--accent-secondary);
-      border-radius: 999px;
-      font-size: 0.72rem;
-    }
-    .nav-right {
-      width: 100%;
-      justify-content: flex-end;
-      gap: 12px;
-      flex-wrap: wrap;
     }
     .page {
       position: relative;
+      display: flex;
+      flex-direction: column;
       grid-template-columns: 1fr;
-      gap: 30px;
+      gap: 22px;
       padding: 14px 20px 260px;
-      align-items: start;
+      align-items: flex-start;
     }
+    .left { display: contents; }
+    .mobile-header { display: flex; order: 0; margin: 2px 0 2px; }
+    .tag { order: 1; margin-top: 2px; text-align: left; width: 100%; justify-content: flex-start; }
+    .coords { order: 2; text-align: left; width: 100%; }
+    .hook { order: 3; text-align: left; width: 100%; }
+    .desc { order: 4; text-align: left; width: 100%; }
+    .rituals-inline { order: 5; width: 100%; display: flex; justify-content: flex-start; margin-top: 4px; }
+    .right { order: 6; width: 100%; margin-top: -6px; }
+    .palette { order: 7; width: 100%; justify-content: flex-start; }
+    .ctas { order: 8; width: 100%; justify-content: center; }
     .board-wrap {
-      width: min(520px, 85vw); /* ~7% downscale from desktop size */
+      width: min(480px, 86vw); /* tighter so it sits inside first 100vh */
       min-height: auto;
-      transform: scale(0.93);
+      transform: scale(0.9);
       transform-origin: center;
       margin-right: 8px; /* keep a little breathing room on the right */
     }
+    .coords { word-break: break-word; }
+    .ctas .btn-primary { justify-content: center; text-align: center; }
+    .fill-steps { grid-template-columns: 1fr; }
+    .fill-step { width: 100%; }
     .anns-right { right: -140px; }
     .actionbar {
       left: 10px;
@@ -970,8 +990,8 @@
       color: var(--lux-gold) !important;
     }
     .ab-product-label {
-      font-size: 0.5rem !important;
-      letter-spacing: 0.03em;
+      font-size: 0.46rem !important;
+      letter-spacing: 0.02em;
       white-space: normal !important;
       text-align: center;
       line-height: 1.25;
@@ -981,10 +1001,10 @@
     .micro-serial { right: 18px; bottom: 84px; }
     .fill-steps {
       width: 100%;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: 1fr;
       margin-top: 18px;
     }
-    .fill-step { height: 100%; }
+    .fill-step { height: 100%; width: 100%; }
     .ritual-grid.multi {
       grid-template-columns: 1fr;
     }
@@ -1058,21 +1078,15 @@
   }
 
   @media (max-width: 980px) {
-    /* Subnav sits below all nav tabs as a full-width scrollable row */
-    .rituals-nav-li {
-      display: contents; /* children join parent flex directly */
-    }
-    .nav-links {
-      flex-wrap: wrap !important;
-    }
+    /* Subnav lives in the content flow on mobile */
+    .rituals-nav-li { position: static; }
     .rituals-subnav {
       position: relative !important;
       top: auto !important;
       left: auto !important;
+      right: auto !important;
       transform: none !important;
       width: 100%;
-      flex: 1 1 100%;
-      order: 99;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
@@ -1080,7 +1094,8 @@
       padding: 7px 10px;
       box-shadow: none;
       flex-wrap: nowrap;
-      margin-top: 2px;
+      justify-content: center;
+      gap: 8px;
     }
     .rituals-subnav::-webkit-scrollbar { display: none; }
     .rituals-subnav::before { display: none !important; }
@@ -1088,7 +1103,7 @@
 
   .ritual-btn {
     font-family: 'Space Mono', monospace;
-    font-size: 0.58rem;
+    font-size: 0.54rem;
     letter-spacing: 0.13em;
     text-transform: uppercase;
     color: var(--text-secondary);
@@ -1867,15 +1882,15 @@
           <button class="ritual-btn" data-board="dinner">ISO-DINNER-RITUALS</button>
         </div>
       </li>
-      <li><a href="#" data-coords="CHEAT SHEET" data-subtitle="ISO-CHEATSHEET-BOARD" data-tag="" data-spec="" data-desc="Temperatures, dicing guides, and flavor logic flows. Engraved directly into the wood. A high-fidelity information system for the kitchen. The only technical reference a home chef will ever need." data-image="assets/cheatsheet-step-2.png" data-section="cheatsheet">
+      <li><a href="#" data-coords="CHEAT SHEET" data-title="Cheatsheet Board" data-subtitle="ISO-CHEATSHEET-BOARD" data-tag="" data-spec="" data-desc="Temperatures, dicing guides, and flavor logic flows. Engraved directly into the wood. A high-fidelity information system for the kitchen. The only technical reference a home chef will ever need." data-image="assets/cheatsheet-step-2.png" data-section="cheatsheet">
         <span class="nl-num">02</span>
         CHEATSHEET
       </a></li>
-      <li><a href="#" data-coords="ISO ROOTS" data-subtitle="ISO-ROOTS-BOARD" data-tag="" data-spec="" data-desc="A handwritten recipe, letter, or signature — etched into hardwood. A permanent piece from someone special." data-image="assets/roots-step-2.png" data-section="roots">
+      <li><a href="#" data-coords="ISO ROOTS" data-title="Roots Board" data-subtitle="ISO-ROOTS-BOARD" data-tag="" data-spec="" data-desc="A handwritten recipe, letter, or signature — etched into hardwood. A permanent piece from someone special." data-image="assets/roots-step-2.png" data-section="roots">
         <span class="nl-num">03</span>
         ROOTS
       </a></li>
-      <li><a href="#" data-coords="ISO COMMISSION" data-subtitle="Custom Commission" data-tag="" data-spec="" data-desc="Bespoke boards for corporate gifts, events, and personal orders. Your mark, engraved. Serialized for permanence." data-image="assets/custom-step-2.png" data-section="custom">
+      <li><a href="#" data-coords="ISO COMMISSION" data-title="Commission" data-subtitle="Custom Commission" data-tag="" data-spec="" data-desc="Bespoke boards for corporate gifts, events, and personal orders. Your mark, engraved. Serialized for permanence." data-image="assets/custom-step-2.png" data-section="custom">
         <span class="nl-num">04</span>
         COMMISSION
       </a></li>
@@ -1891,13 +1906,22 @@
 
 <div class="page">
 
+  <div class="mobile-header" id="mobile-header" aria-hidden="true">
+    <div class="mobile-logo" id="mobile-logo">
+      <img class="logo-dark" src="assets/logo_iso_white.png" alt="ISO Boards">
+      <img class="logo-light" src="assets/logo_iso_black.png" alt="ISO Boards">
+    </div>
+    <div class="mobile-toggle-slot" id="mobile-toggle-slot"></div>
+  </div>
+
   <div class="left">
     <div class="tag" id="hero-tag"></div>
-    <div class="coords" id="hero-coords">ISO<br>RITUALS</div>
+    <div class="coords" id="hero-coords">Cheese Pairing</div>
     <div class="hook">Stop serving. Start Curating.</div>
     <div class="subtitle" id="hero-subtitle">ISO-CHEESEPAIRING-RITUALS</div>
     <div class="spec-ref" id="hero-spec"></div>
     <div class="desc" id="hero-desc">Dark walnut. Etched channels. Built for cheese, charcuterie, and the moments around them.</div>
+    <div class="rituals-inline" id="rituals-inline"></div>
     <div class="ctas">
       <a href="#" class="btn-primary" id="hero-order-btn">
         <span>ORDER NOW</span>
@@ -2260,6 +2284,7 @@
   // ── Board sets per Ritual ──────────────────────────────────────────────────
   const BOARD_SETS = {
     cheese: {
+      title: 'Cheese Pairing',
       coords: 'ISO RITUALS',
       subtitle: 'ISO-CHEESEPAIRING-RITUALS',
       tag: '',
@@ -2279,6 +2304,7 @@
       ]
     },
     dinner: {
+      title: 'Dinner Rituals',
       coords: 'DINNER RITUALS',
       subtitle: 'ISO-DINNER-RITUALS',
       tag: '',
@@ -2298,6 +2324,7 @@
       ]
     },
     roots: {
+      title: 'Roots Board',
       coords: 'ISO ROOTS',
       subtitle: 'ISO-ROOTS-BOARD',
       tag: '',
@@ -2315,6 +2342,7 @@
       ]
     },
     custom: {
+      title: 'Commission',
       coords: 'ISO COMMISSION',
       subtitle: 'Custom Commission',
       tag: '',
@@ -2332,6 +2360,7 @@
       ]
     },
     cheatsheet: {
+      title: 'Cheatsheet Board',
       coords: 'CHEAT SHEET',
       subtitle: 'ISO-CHEATSHEET-BOARD',
       tag: '',
@@ -2369,6 +2398,9 @@
   const imageViewerImg  = document.getElementById('image-viewer-img');
   const imageViewerClose = document.getElementById('image-viewer-close');
   const imageViewerBackdrop = document.getElementById('image-viewer-backdrop');
+  const ritualsInline   = document.getElementById('rituals-inline');
+  const mobileToggleSlot = document.getElementById('mobile-toggle-slot');
+  const themeToggleEl   = document.getElementById('theme-toggle');
 
   let cycleImages = [];
   let cycleIdx    = 0;
@@ -2381,8 +2413,50 @@
   let viewerShouldResumeCycle = false;
   let currentBoardKey = 'cheese';
   const imageProbeCache = new Map();
+  const START_SLIDE_INDEX = 2;
+  const ritualsSubnavHome = ritualsSubnav ? ritualsSubnav.parentElement : null;
+  const ritualsSubnavNext = ritualsSubnav ? ritualsSubnav.nextSibling : null;
+  const themeToggleHome = themeToggleEl ? themeToggleEl.parentElement : null;
+  const themeToggleNext = themeToggleEl ? themeToggleEl.nextSibling : null;
 
   // ── Helpers ───────────────────────────────────────────────────────────────
+  function getStartIndex(total) {
+    if (!total || total < 1) return 0;
+    return Math.min(START_SLIDE_INDEX, total - 1);
+  }
+
+  function relocateRitualsSubnav() {
+    if (!ritualsSubnav || !ritualsInline) return;
+    const isMobile = window.matchMedia('(max-width: 980px)').matches;
+    if (isMobile) {
+      if (ritualsSubnav.parentElement !== ritualsInline) {
+        ritualsInline.appendChild(ritualsSubnav);
+      }
+    } else if (ritualsSubnavHome && ritualsSubnav.parentElement !== ritualsSubnavHome) {
+      if (ritualsSubnavNext && ritualsSubnavNext.parentNode === ritualsSubnavHome) {
+        ritualsSubnavHome.insertBefore(ritualsSubnav, ritualsSubnavNext);
+      } else {
+        ritualsSubnavHome.appendChild(ritualsSubnav);
+      }
+    }
+  }
+
+  function relocateThemeToggle() {
+    if (!themeToggleEl || !mobileToggleSlot) return;
+    const isMobile = window.matchMedia('(max-width: 980px)').matches;
+    if (isMobile) {
+      if (themeToggleEl.parentElement !== mobileToggleSlot) {
+        mobileToggleSlot.appendChild(themeToggleEl);
+      }
+    } else if (themeToggleHome && themeToggleEl.parentElement !== themeToggleHome) {
+      if (themeToggleNext && themeToggleNext.parentNode === themeToggleHome) {
+        themeToggleHome.insertBefore(themeToggleEl, themeToggleNext);
+      } else {
+        themeToggleHome.appendChild(themeToggleEl);
+      }
+    }
+  }
+
   function highlightStep(i) {
     activeFillSteps.forEach((step, sIdx) => step.classList.toggle('active', sIdx === i));
   }
@@ -2504,8 +2578,8 @@
 
   function restartCycle(resetIndex = true) {
     clearCycleTimers();
-    if (resetIndex) cycleIdx = 0;
-    if (cycleImages[0] && cycleImages[0].images.length > 1) cycleTimer = setInterval(nextSlide, 5200);
+    if (resetIndex) cycleIdx = getStartIndex(cycleImages[0]?.images.length || 0);
+    if (cycleImages[0] && cycleImages[0].images.length > 1) cycleTimer = setInterval(nextSlide, 3120);
   }
 
   function pauseCycle(ms = 20000) {
@@ -2724,7 +2798,7 @@
     if (token !== loadToken) return;
 
     cycleImages = variants;
-    cycleIdx = 0;
+    cycleIdx = getStartIndex(variants[0]?.images.length || 0);
 
     // Hero text fade
     [heroCoords, heroSubtitle, heroTag, heroSpec, heroDesc].forEach(el => {
@@ -2734,13 +2808,13 @@
     });
 
     setTimeout(() => {
-      heroCoords.innerHTML   = splitCoords(data.coords);
+      heroCoords.textContent   = data.title || data.subtitle;
       heroSubtitle.textContent = data.subtitle;
       heroTag.textContent    = data.tag;
       heroSpec.textContent   = data.spec;
       heroDesc.textContent   = data.desc;
       renderBoardPanels(variants, data.steps);
-      displayStep(0);
+      displayStep(getStartIndex(cycleImages[0]?.images.length || 0));
       [heroCoords, heroSubtitle, heroTag, heroSpec, heroDesc].forEach(el => {
         el.style.opacity   = '1';
         el.style.transform = 'translateY(0)';
@@ -2812,7 +2886,7 @@
             el.style.transform  = 'translateY(8px)';
           });
           setTimeout(() => {
-            heroCoords.innerHTML      = splitCoords(coords);
+            heroCoords.textContent    = (targetLink.dataset.title || subtitle || coords || '').trim();
             heroSubtitle.textContent  = subtitle;
             heroTag.textContent       = tag;
             heroSpec.textContent      = spec;
@@ -2897,7 +2971,7 @@
           el.style.transform  = 'translateY(8px)';
         });
         setTimeout(() => {
-          heroCoords.innerHTML      = splitCoords(coords);
+          heroCoords.textContent    = (link.dataset.title || subtitle || coords || '').trim();
           heroSubtitle.textContent  = subtitle;
           heroTag.textContent       = tag;
           heroSpec.textContent      = spec;
@@ -2919,6 +2993,8 @@
   // ── Cart count removed — ORDER NOW now opens the modal ───────────────────
 
   // ── Auto-cycle (starts on Charcuterie board) ──────────────────────────────
+  relocateRitualsSubnav();
+  relocateThemeToggle();
   loadBoardSet('cheese');
 
   // ── Theme toggle ──────────────────────────────────────────────────────────
@@ -3550,7 +3626,11 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
     }
   });
 
-  window.addEventListener('resize', setBoardPose);
+  window.addEventListener('resize', () => {
+    setBoardPose();
+    relocateRitualsSubnav();
+    relocateThemeToggle();
+  });
 </script>
 </body>
 </html>
