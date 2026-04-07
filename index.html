@@ -1824,6 +1824,23 @@
   .om-shipping-free {
     color: #4caf50;
   }
+  /* Fix optgroup labels in dark mode */
+  .om-select optgroup {
+    color: var(--text-secondary);
+    background: var(--bg-primary);
+  }
+  .om-select option {
+    color: var(--text-primary);
+    background: var(--bg-primary);
+  }
+  [data-theme="light"] .om-select optgroup {
+    color: #555555;
+    background: #ffffff;
+  }
+  [data-theme="light"] .om-select option {
+    color: #151515;
+    background: #ffffff;
+  }
 </style>
 </head>
 <body>
@@ -2125,6 +2142,10 @@
           <select class="om-select" id="om-pay-currency" style="width:100%; background:#111; color:#fff; border:1px solid #333; padding:12px; border-radius:4px; margin-bottom:15px;">
             <option value="USD">USD ($)</option>
             <option value="AED">AED (د.إ)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="SAR">SAR (﷼)</option>
+            <option value="QAR">QAR (ر.ق)</option>
+            <option value="INR">INR (₹)</option>
           </select>
         </div>
         <div class="om-field">
@@ -2157,34 +2178,24 @@
               <option value="UK">United Kingdom</option>
               <option value="Spain">Spain</option>
               <option value="Netherlands">Netherlands</option>
-              <option value="Other Europe">Other European Country</option>
             </optgroup>
             <optgroup label="Asia">
               <option value="India">India</option>
               <option value="Pakistan">Pakistan</option>
               <option value="Bangladesh">Bangladesh</option>
               <option value="Sri Lanka">Sri Lanka</option>
-              <option value="Other Asia">Other Asian Country</option>
             </optgroup>
             <optgroup label="Middle East">
               <option value="Jordan">Jordan</option>
               <option value="Lebanon">Lebanon</option>
               <option value="Egypt">Egypt</option>
               <option value="Iraq">Iraq</option>
-              <option value="Other Middle East">Other Middle East Country</option>
-            </optgroup>
-            <optgroup label="Africa">
-              <option value="Nigeria">Nigeria</option>
-              <option value="Kenya">Kenya</option>
-              <option value="South Africa">South Africa</option>
-              <option value="Other Africa">Other African Country</option>
             </optgroup>
             <optgroup label="Other">
               <option value="Australia">Australia</option>
               <option value="New Zealand">New Zealand</option>
               <option value="Japan">Japan</option>
               <option value="China">China</option>
-              <option value="Other">Other Country</option>
             </optgroup>
           </select>
         </div>
@@ -2990,14 +3001,27 @@
   const rootsFileInput = document.getElementById('om-roots-file');
   const fileChosen     = document.getElementById('om-file-chosen');
 
+  const CURRENCY_FX     = { USD: 1, AED: 3.6725, EUR: 0.92, SAR: 3.75, QAR: 3.64, INR: 83.5 };
+  const CURRENCY_SYMS   = { USD: '$', AED: 'AED ', EUR: '€', SAR: 'SAR ', QAR: 'QAR ', INR: '₹' };
+
+  function formatPrice(usdAmount, currency) {
+    const rate = CURRENCY_FX[currency] || 1;
+    const sym  = CURRENCY_SYMS[currency] || currency + ' ';
+    const decimals = ['USD','EUR'].includes(currency) ? 2 : 0;
+    return `${sym}${(usdAmount * rate).toFixed(decimals)}`;
+  }
+
   function omUpdateQtyUI() {
     omQtyVal.textContent = omQty;
+    const currency = (document.getElementById('om-pay-currency') || {}).value || 'USD';
     if (omQty === 1) {
-      omQtySummary.textContent = '1 board — $174.00';
-      omPricingNote.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Single board — $174.00';
+      const p = formatPrice(174, currency);
+      omQtySummary.textContent = `1 board — ${p}`;
+      omPricingNote.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Single board — ${p}`;
     } else if (omQty === 2) {
+      const p = formatPrice(174 * 2 * 0.9, currency);
       omQtySummary.textContent = '2 boards — 10% off';
-      omPricingNote.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 2 boards — 10% discount applied';
+      omPricingNote.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 2 boards — 10% discount applied (${p})`;
     } else {
       omQtySummary.textContent = omQty + ' boards — special pricing';
       omPricingNote.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 3+ boards — we\'ll arrange a special deal on WhatsApp';
@@ -3227,125 +3251,125 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
   const SHIPPING = {
     // UAE domestic
     'UAE': {
-      standard: { label: 'Standard Delivery', price: 0,  priceLabel: 'FREE', time: 'Within 5 working days' },
-      express:  { label: 'Express Delivery',  price: 70, priceLabel: 'AED 70', time: 'Within 2 working days' }
+      standard: { label: 'Standard Delivery', price: 0,  priceLabel: 'FREE', time: 'Within 7 working days' },
+      express:  { label: 'Express Delivery',  price: 70, priceLabel: 'AED 70', time: 'Within 5 working days' }
     },
     // GCC
     'Saudi Arabia': {
-      standard: { label: 'Express',  price: 118, priceLabel: 'AED 118', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 305, priceLabel: 'AED 305', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 118, priceLabel: 'AED 118', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 305, priceLabel: 'AED 305', time: 'Within 9 working days' }
     },
     'Qatar': {
-      standard: { label: 'Express',  price: 135, priceLabel: 'AED 135', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 135, priceLabel: 'AED 135', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 working days' }
     },
     'Bahrain': {
-      standard: { label: 'Express',  price: 118, priceLabel: 'AED 118', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 118, priceLabel: 'AED 118', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 working days' }
     },
     'Kuwait': {
-      standard: { label: 'Express',  price: 120, priceLabel: 'AED 120', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 120, priceLabel: 'AED 120', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 working days' }
     },
     'Oman': {
-      standard: { label: 'Express',  price: 123, priceLabel: 'AED 123', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 297, priceLabel: 'AED 297', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 123, priceLabel: 'AED 123', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 297, priceLabel: 'AED 297', time: 'Within 9 working days' }
     },
     // North America
     'Canada': {
-      standard: { label: 'Express',  price: 230, priceLabel: 'AED 230', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 432, priceLabel: 'AED 432', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 230, priceLabel: 'AED 230', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 432, priceLabel: 'AED 432', time: 'Within 9 working days' }
     },
     'USA': {
-      standard: { label: 'Express',  price: 265, priceLabel: 'AED 265', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 432, priceLabel: 'AED 432', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 265, priceLabel: 'AED 265', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 432, priceLabel: 'AED 432', time: 'Within 9 working days' }
     },
     'Mexico': {
-      standard: { label: 'Express',  price: 248, priceLabel: 'AED 248', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 432, priceLabel: 'AED 432', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 248, priceLabel: 'AED 248', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 432, priceLabel: 'AED 432', time: 'Within 9 working days' }
     },
     // Europe
     'Germany': {
-      standard: { label: 'Express',  price: 195, priceLabel: 'AED 195', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 386, priceLabel: 'AED 386', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 195, priceLabel: 'AED 195', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 386, priceLabel: 'AED 386', time: 'Within 9 working days' }
     },
     'Italy': {
-      standard: { label: 'Express',  price: 190, priceLabel: 'AED 190', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 386, priceLabel: 'AED 386', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 190, priceLabel: 'AED 190', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 386, priceLabel: 'AED 386', time: 'Within 9 working days' }
     },
     'France': {
-      standard: { label: 'Express',  price: 205, priceLabel: 'AED 205', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 298, priceLabel: 'AED 298', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 205, priceLabel: 'AED 205', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 298, priceLabel: 'AED 298', time: 'Within 9 working days' }
     },
     'UK': {
-      standard: { label: 'Express',  price: 197, priceLabel: 'AED 197', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 357, priceLabel: 'AED 357', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 197, priceLabel: 'AED 197', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 357, priceLabel: 'AED 357', time: 'Within 9 working days' }
     },
     'Spain': {
-      standard: { label: 'Express',  price: 197, priceLabel: 'AED 197', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 357, priceLabel: 'AED 357', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 197, priceLabel: 'AED 197', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 357, priceLabel: 'AED 357', time: 'Within 9 working days' }
     },
     'Netherlands': {
-      standard: { label: 'Express',  price: 197, priceLabel: 'AED 197', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 357, priceLabel: 'AED 357', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 197, priceLabel: 'AED 197', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 357, priceLabel: 'AED 357', time: 'Within 9 working days' }
     },
     'Other Europe': {
-      standard: { label: 'Express',  price: 197, priceLabel: 'AED 197', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 357, priceLabel: 'AED 357', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 197, priceLabel: 'AED 197', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 357, priceLabel: 'AED 357', time: 'Within 9 working days' }
     },
     // Asia — use India as baseline
     'India': {
-      standard: { label: 'Express',  price: 160, priceLabel: 'AED 160', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 294, priceLabel: 'AED 294', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 160, priceLabel: 'AED 160', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 294, priceLabel: 'AED 294', time: 'Within 9 working days' }
     },
     'Pakistan': {
-      standard: { label: 'Express',  price: 160, priceLabel: 'AED 160', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 294, priceLabel: 'AED 294', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 160, priceLabel: 'AED 160', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 294, priceLabel: 'AED 294', time: 'Within 9 working days' }
     },
     'Bangladesh': {
-      standard: { label: 'Express',  price: 160, priceLabel: 'AED 160', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 294, priceLabel: 'AED 294', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 160, priceLabel: 'AED 160', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 294, priceLabel: 'AED 294', time: 'Within 9 working days' }
     },
     'Sri Lanka': {
-      standard: { label: 'Express',  price: 160, priceLabel: 'AED 160', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 294, priceLabel: 'AED 294', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 160, priceLabel: 'AED 160', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 294, priceLabel: 'AED 294', time: 'Within 9 working days' }
     },
     'Other Asia': {
-      standard: { label: 'Express',  price: 160, priceLabel: 'AED 160', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 294, priceLabel: 'AED 294', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 160, priceLabel: 'AED 160', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 294, priceLabel: 'AED 294', time: 'Within 9 working days' }
     },
     // Middle East — use avg of Kuwait/Qatar/Bahrain
     'Jordan': {
-      standard: { label: 'Express',  price: 123, priceLabel: 'AED 123', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 297, priceLabel: 'AED 297', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 123, priceLabel: 'AED 123', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 297, priceLabel: 'AED 297', time: 'Within 9 working days' }
     },
     'Lebanon': {
-      standard: { label: 'Express',  price: 123, priceLabel: 'AED 123', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 297, priceLabel: 'AED 297', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 123, priceLabel: 'AED 123', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 297, priceLabel: 'AED 297', time: 'Within 9 working days' }
     },
     'Egypt': {
-      standard: { label: 'Express',  price: 123, priceLabel: 'AED 123', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 297, priceLabel: 'AED 297', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 123, priceLabel: 'AED 123', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 297, priceLabel: 'AED 297', time: 'Within 9 working days' }
     },
     'Iraq': {
-      standard: { label: 'Express',  price: 123, priceLabel: 'AED 123', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 297, priceLabel: 'AED 297', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 123, priceLabel: 'AED 123', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 297, priceLabel: 'AED 297', time: 'Within 9 working days' }
     },
     'Other Middle East': {
-      standard: { label: 'Express',  price: 123, priceLabel: 'AED 123', time: 'Within 13 days' },
-      express:  { label: 'Premium', price: 297, priceLabel: 'AED 297', time: 'Within 9 days' }
+      standard: { label: 'Express',  price: 123, priceLabel: 'AED 123', time: 'Within 13 working days' },
+      express:  { label: 'Premium', price: 297, priceLabel: 'AED 297', time: 'Within 9 working days' }
     },
     // Africa — use Kuwait rates
-    'Nigeria':      { standard: { label: 'Express', price: 120, priceLabel: 'AED 120', time: 'Within 13 days' }, express: { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 days' } },
-    'Kenya':        { standard: { label: 'Express', price: 120, priceLabel: 'AED 120', time: 'Within 13 days' }, express: { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 days' } },
-    'South Africa': { standard: { label: 'Express', price: 120, priceLabel: 'AED 120', time: 'Within 13 days' }, express: { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 days' } },
-    'Other Africa': { standard: { label: 'Express', price: 120, priceLabel: 'AED 120', time: 'Within 13 days' }, express: { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 days' } },
+    'Nigeria':      { standard: { label: 'Express', price: 120, priceLabel: 'AED 120', time: 'Within 13 working days' }, express: { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 working days' } },
+    'Kenya':        { standard: { label: 'Express', price: 120, priceLabel: 'AED 120', time: 'Within 13 working days' }, express: { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 working days' } },
+    'South Africa': { standard: { label: 'Express', price: 120, priceLabel: 'AED 120', time: 'Within 13 working days' }, express: { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 working days' } },
+    'Other Africa': { standard: { label: 'Express', price: 120, priceLabel: 'AED 120', time: 'Within 13 working days' }, express: { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 working days' } },
     // Other / default
-    'Australia':    { standard: { label: 'Express', price: 230, priceLabel: 'AED 230', time: 'Within 13 days' }, express: { label: 'Premium', price: 386, priceLabel: 'AED 386', time: 'Within 9 days' } },
-    'New Zealand':  { standard: { label: 'Express', price: 230, priceLabel: 'AED 230', time: 'Within 13 days' }, express: { label: 'Premium', price: 386, priceLabel: 'AED 386', time: 'Within 9 days' } },
-    'Japan':        { standard: { label: 'Express', price: 180, priceLabel: 'AED 180', time: 'Within 13 days' }, express: { label: 'Premium', price: 340, priceLabel: 'AED 340', time: 'Within 9 days' } },
-    'China':        { standard: { label: 'Express', price: 180, priceLabel: 'AED 180', time: 'Within 13 days' }, express: { label: 'Premium', price: 340, priceLabel: 'AED 340', time: 'Within 9 days' } },
-    'Other':        { standard: { label: 'Express', price: 200, priceLabel: 'AED 200', time: 'Within 13 days' }, express: { label: 'Premium', price: 370, priceLabel: 'AED 370', time: 'Within 9 days' } },
+    'Australia':    { standard: { label: 'Express', price: 230, priceLabel: 'AED 230', time: 'Within 13 working days' }, express: { label: 'Premium', price: 386, priceLabel: 'AED 386', time: 'Within 9 working days' } },
+    'New Zealand':  { standard: { label: 'Express', price: 230, priceLabel: 'AED 230', time: 'Within 13 working days' }, express: { label: 'Premium', price: 386, priceLabel: 'AED 386', time: 'Within 9 working days' } },
+    'Japan':        { standard: { label: 'Express', price: 180, priceLabel: 'AED 180', time: 'Within 13 working days' }, express: { label: 'Premium', price: 340, priceLabel: 'AED 340', time: 'Within 9 working days' } },
+    'China':        { standard: { label: 'Express', price: 180, priceLabel: 'AED 180', time: 'Within 13 working days' }, express: { label: 'Premium', price: 340, priceLabel: 'AED 340', time: 'Within 9 working days' } },
+    'Other':        { standard: { label: 'Express', price: 200, priceLabel: 'AED 200', time: 'Within 13 working days' }, express: { label: 'Premium', price: 370, priceLabel: 'AED 370', time: 'Within 9 working days' } },
   };
 
   let omSelectedShipping = 'standard'; // 'standard' or 'express'
@@ -3361,14 +3385,24 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
     field.style.display = '';
 
     const rates = getShippingRates(country);
-    const isUAE = country === 'UAE';
+
+    const currency = (document.getElementById('om-pay-currency') || {}).value || 'AED';
+    const FX      = { USD: 1, AED: 3.6725, EUR: 0.92, SAR: 3.75, QAR: 3.64, INR: 83.5 };
+    const SYMBOLS = { USD: '$', AED: 'AED ', EUR: '€', SAR: 'SAR ', QAR: 'QAR ', INR: '₹' };
+    const fxRate  = FX[currency] || 1;
+    const sym     = SYMBOLS[currency] || currency + ' ';
+    const decimals = ['USD','EUR'].includes(currency) ? 2 : 0;
 
     container.innerHTML = ['standard', 'express'].map(type => {
       const r = rates[type];
       const isActive = omSelectedShipping === type;
-      const priceHtml = r.price === 0
-        ? `<span class="om-shipping-price om-shipping-free">FREE</span>`
-        : `<span class="om-shipping-price">${r.priceLabel}</span>`;
+      let priceHtml;
+      if (r.price === 0) {
+        priceHtml = `<span class="om-shipping-price om-shipping-free">FREE</span>`;
+      } else {
+        const shippingConverted = (r.price / 3.6725) * fxRate;
+        priceHtml = `<span class="om-shipping-price">${sym}${shippingConverted.toFixed(decimals)}</span>`;
+      }
       return `
         <div class="om-shipping-option${isActive ? ' active' : ''}" data-type="${type}">
           <div class="om-shipping-option-dot"></div>
@@ -3402,22 +3436,24 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
     const rates = getShippingRates(country);
     const r = rates[omSelectedShipping];
     
-    // Shipping is natively AED. Convert if USD is selected.
-    const USD_PER_AED = 1 / 3.6725;
+    // FX rates relative to USD
+    const FX = { USD: 1, AED: 3.6725, EUR: 0.92, SAR: 3.75, QAR: 3.64, INR: 83.5 };
+    const SYMBOLS = { USD: '$', AED: 'AED ', EUR: '€', SAR: 'SAR ', QAR: 'QAR ', INR: '₹' };
+    const rate = FX[currency] || 1;
+    const sym  = SYMBOLS[currency] || currency + ' ';
+
+    // Shipping is natively AED; board price is natively USD
     const shippingAED = r.price;
-    const shippingUSD = shippingAED * USD_PER_AED;
-    
-    // Board price is natively USD. Convert if AED is selected.
+    const shippingUSD = shippingAED / 3.6725;
+    const shippingConverted = shippingUSD * rate;
+
     const boardUSD = omQty === 1 ? 174 : omQty === 2 ? (174 * 2 * 0.9) : 0;
-    const boardAED = boardUSD * 3.6725;
+    const boardConverted = boardUSD * rate;
     
-    if (currency === 'USD') {
-      sumShipping.textContent = shippingAED === 0 ? 'FREE' : `$${shippingUSD.toFixed(2)}`;
-      if (boardUSD > 0) sumTotal.textContent = `$${(boardUSD + shippingUSD).toFixed(2)}`;
-    } else {
-      sumShipping.textContent = shippingAED === 0 ? 'FREE' : `AED ${shippingAED.toFixed(0)}`;
-      if (boardAED > 0) sumTotal.textContent = `AED ${(boardAED + shippingAED).toFixed(0)}`;
-    }
+    const decimals = ['USD','EUR'].includes(currency) ? 2 : 0;
+
+    sumShipping.textContent = shippingAED === 0 ? 'FREE' : `${sym}${shippingConverted.toFixed(decimals)}`;
+    if (boardUSD > 0) sumTotal.textContent = `${sym}${(boardConverted + shippingConverted).toFixed(decimals)}`;
   }
 
   document.getElementById('om-country').addEventListener('change', function() {
@@ -3426,6 +3462,9 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
   });
 
   document.getElementById('om-pay-currency').addEventListener('change', function() {
+    omUpdateQtyUI();
+    const country = document.getElementById('om-country').value;
+    if (country) renderShippingOptions(country);
     updateSummaryShipping();
   });
 
@@ -3490,16 +3529,12 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
       const currencyEl = document.getElementById('om-pay-currency');
       const paymentCurrency = (currencyEl ? currencyEl.value : 'USD') || 'USD';
 
-      const USD_PER_AED = 1 / 3.6725;
+      const fxRate = CURRENCY_FX[paymentCurrency] || 1;
       const boardPriceUSD = omQty === 1 ? 174 : 174 * 2 * 0.9; // 10% off for 2
-      const boardPriceAED = Math.round(boardPriceUSD * 3.6725 * 100) / 100;
-      // shippingFee is always in AED
-      const shippingUSD = Math.round(shippingFee * USD_PER_AED * 100) / 100;
-
-      const totalUSD = Math.round((boardPriceUSD + shippingUSD) * 100) / 100;
-      const totalAED = Math.round((boardPriceAED + shippingFee) * 100) / 100;
-
-      const paymentAmount = paymentCurrency === 'AED' ? totalAED : totalUSD;
+      // shippingFee is always in AED; convert to USD first, then to payment currency
+      const shippingUSD = shippingFee / 3.6725;
+      const totalUSD = boardPriceUSD + shippingUSD;
+      const paymentAmount = Math.round(totalUSD * fxRate * 100) / 100;
       const description = `ISO Boards — ${omQty}x ${omSelectedProduct}${shippingMethod ? ' · ' + shippingMethod : ''}`;
 
       const redirectUrl = await createZiinaPayment(paymentAmount, description, paymentCurrency);
