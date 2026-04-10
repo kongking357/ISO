@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+Ôªø<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ISO Boards ó Luxury Handcrafted Serving Boards</title>
+<title>ISO Boards ¬∑ Luxury Handcrafted Serving Boards</title>
 <meta name="description" content="ISO Boards. Luxury Handcrafted hardwood serving boards for chefs, occasions, gifts, and the table worth remembering.">
 <link rel="icon" type="image/webp" href="assets/navicon.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -931,7 +931,7 @@
     }
     .ab-iconbox { display: none; }
     .ab-label { display: inline-block !important; }
-    /* Row 2: product buttons ó no images, text only, 2 lines of info */
+    /* Row 2: product buttons ‚Äî no images, text only, 2 lines of info */
     .ab-products {
       order: 3;
       flex: 1 1 100%;
@@ -1039,12 +1039,12 @@
     }
   }
 
-  /* Rituals nav li ó holds the dropdown */
+  /* Rituals nav li ‚Äî holds the dropdown */
   .rituals-nav-li {
     position: relative;
   }
 
-  /* Rituals sub-nav ó drops below the RITUALS tab, centered under it */
+  /* Rituals sub-nav ‚Äî drops below the RITUALS tab, centered under it */
   .rituals-subnav {
     display: none;
     position: absolute;
@@ -1169,7 +1169,7 @@
     border-right: inherit;
   }
 
-  /* Full-bleed ó cover ALWAYS, zero black borders in any state */
+  /* Full-bleed ‚Äî cover ALWAYS, zero black borders in any state */
   .ab-product-bg {
     position: absolute;
     inset: 0;
@@ -1182,7 +1182,7 @@
     transform: scale(1.1);
   }
 
-  /* One-shot click pulse ó scale only, cover stays intact */
+  /* One-shot click pulse ‚Äî scale only, cover stays intact */
   @keyframes clickZoom {
     0%   { transform: scale(1); }
     40%  { transform: scale(1.18); }
@@ -1206,7 +1206,7 @@
     z-index: 1;
   }
 
-  /* Gold top-edge line ó only persistent active indicator */
+  /* Gold top-edge line ‚Äî only persistent active indicator */
   .ab-product.active::before {
     content: '';
     position: absolute;
@@ -1217,7 +1217,7 @@
     z-index: 3;
   }
 
-  /* Text overlay ó bottom left, inside clip */
+  /* Text overlay ‚Äî bottom left, inside clip */
   .ab-product-info {
     position: absolute;
     bottom: 10px;
@@ -1229,7 +1229,7 @@
     pointer-events: none;
   }
 
-  /* -- Hover popup ó floats upward out of bar --------------------------- */
+  /* -- Hover popup ‚Äî floats upward out of bar --------------------------- */
   .ab-product-popup {
     position: absolute;
     bottom: calc(100% + 10px);
@@ -1249,7 +1249,7 @@
   }
   .ab-product-popup-img {
     width: 100%;
-    /* Let image dictate natural height ó no forced aspect ratio */
+    /* Let image dictate natural height ‚Äî no forced aspect ratio */
     padding-bottom: 0;
     background-size: contain;
     background-position: center;
@@ -1322,14 +1322,14 @@
     transition: background-size 0.42s cubic-bezier(0.4,0,0.2,1), transform 0.42s cubic-bezier(0.4,0,0.2,1);
   }
   
-  /* When hovered (expanded) or active ó keep cover to prevent black edges */
+  /* When hovered (expanded) or active ‚Äî keep cover to prevent black edges */
   .ab-products:hover .ab-product:hover .ab-product-bg,
   .ab-product.active .ab-product-bg {
     background-size: cover;
     transform: none;
   }
 
-  /* Dark gradient overlay ó stronger at bottom for text */
+  /* Dark gradient overlay ‚Äî stronger at bottom for text */
   .ab-product::after {
     content: '';
     position: absolute;
@@ -1371,7 +1371,7 @@
     z-index: 3;
   }
 
-  /* Text overlay ó bottom left */
+  /* Text overlay ‚Äî bottom left */
   .ab-product-info {
     position: absolute;
     bottom: 10px;
@@ -1545,7 +1545,7 @@
   .om-custom-brief:focus { border-color: var(--lux-gold); }
   .om-product.active .om-custom-brief { display: block; }
 
-  /* Roots attach widget ó only visible when Roots is active */
+  /* Roots attach widget ‚Äî only visible when Roots is active */
   .om-roots-attach {
     display: none;
     flex-direction: column; gap: 6px;
@@ -1712,6 +1712,23 @@
   }
   .om-input::placeholder { color: var(--text-secondary); opacity: 0.5; }
   .om-input:focus { border-color: var(--accent-primary); }
+
+  .om-field.invalid .om-input,
+  .om-field.invalid .om-select {
+    border-color: #d97706;
+    box-shadow: 0 0 0 1px rgba(217,119,6,0.35);
+  }
+  .om-form-error {
+    display: none;
+    margin: 6px 0 14px;
+    padding: 10px 12px;
+    border: 1px solid rgba(217,119,6,0.45);
+    background: rgba(217,119,6,0.08);
+    color: var(--text-primary);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    border-radius: 8px;
+  }
 
   .om-order-summary {
     background: rgba(255,255,255,0.02);
@@ -1886,7 +1903,7 @@
         <span class="nl-num">02</span>
         CHEATSHEET
       </a></li>
-      <li><a href="#" data-coords="ISO ROOTS" data-title="Roots Board" data-subtitle="ISO-ROOTS-BOARD" data-tag="" data-spec="" data-desc="A handwritten recipe, letter, or signature ó etched into hardwood. A permanent piece from someone special." data-image="assets/roots-step-2.webp" data-section="roots">
+      <li><a href="#" data-coords="ISO ROOTS" data-title="Roots Board" data-subtitle="ISO-ROOTS-BOARD" data-tag="" data-spec="" data-desc="A handwritten recipe, letter, or signature ‚Äî etched into hardwood. A permanent piece from someone special." data-image="assets/roots-step-2.webp" data-section="roots">
         <span class="nl-num">03</span>
         ROOTS
       </a></li>
@@ -1898,8 +1915,8 @@
   </div>
   <div class="nav-right">
     <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
-      <span class="moon">??</span>
-      <span class="sun" style="display:none">??</span>
+      <span class="moon">üåô</span>
+      <span class="sun" style="display:none">‚òÄÔ∏è</span>
     </button>
   </div>
 </nav>
@@ -2066,7 +2083,7 @@
 <div class="image-viewer" id="image-viewer" aria-hidden="true">
   <div class="image-viewer-backdrop" id="image-viewer-backdrop"></div>
   <div class="image-viewer-panel" role="dialog" aria-modal="true" aria-label="Board detail view">
-    <button class="image-viewer-close" id="image-viewer-close" type="button" aria-label="Close image viewer">◊</button>
+    <button class="image-viewer-close" id="image-viewer-close" type="button" aria-label="Close image viewer">√ó</button>
     <img class="image-viewer-img" id="image-viewer-img" alt="">
   </div>
 </div>
@@ -2133,7 +2150,7 @@
           <div class="om-product-info" style="width:100%;">
             <span class="om-product-name">Custom Commission</span>
             <span class="om-product-sub">BESPOKE</span>
-            <textarea class="om-custom-brief" id="om-custom-brief" rows="3" placeholder="Write a brief explanation of your needed design and our team will contact you to finalize the board content with youÖ"></textarea>
+            <textarea class="om-custom-brief" id="om-custom-brief" rows="3" placeholder="Write a brief explanation of your needed design and our team will contact you to finalize the board content with you."></textarea>
           </div>
         </div>
       </div>
@@ -2143,12 +2160,12 @@
         <button class="om-qty-btn" id="om-qty-minus">-</button>
         <span class="om-qty-val" id="om-qty-val">1</span>
         <button class="om-qty-btn" id="om-qty-plus">+</button>
-        <div class="om-qty-summary" id="om-qty-summary">1 board ó $188.00</div>
+        <div class="om-qty-summary" id="om-qty-summary">1 board ¬∑ $188.00</div>
       </div>
 
       <div class="om-pricing-note" id="om-pricing-note">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        Single board ó $188.00
+        Single board ¬∑ $188.00
       </div>
 
       <button class="om-next-btn" id="om-next-btn">
@@ -2165,21 +2182,21 @@
           <label class="om-field-label">Payment Currency</label>
           <select class="om-select" id="om-pay-currency" style="width:100%; background:#111; color:#fff; border:1px solid #333; padding:12px; border-radius:4px; margin-bottom:15px;">
             <option value="USD">USD ($)</option>
-            <option value="AED">AED (?.?)</option>
-            <option value="EUR">EUR (Ä)</option>
-            <option value="SAR">SAR (?)</option>
-            <option value="QAR">QAR (?.?)</option>
-            <option value="INR">INR (?)</option>
+            <option value="AED">AED (ÿØ.ÿπ)</option>
+            <option value="EUR">EUR (‚Ç¨)</option>
+            <option value="SAR">SAR (ÿ±)</option>
+            <option value="QAR">QAR (ŸÇ.ÿ±)</option>
+            <option value="INR">INR (‚Çπ)</option>
           </select>
         </div>
         <div class="om-field">
           <label class="om-field-label">Full Name</label>
-          <input class="om-input" id="om-name" type="text" placeholder="Your name" autocomplete="name">
+          <input class="om-input" id="om-name" type="text" placeholder="Your name" autocomplete="name" required>
         </div>
         <div class="om-field">
           <label class="om-field-label">Delivery Country</label>
-          <select class="om-select" id="om-country">
-            <option value="">ó Select country ó</option>
+          <select class="om-select" id="om-country" required>
+            <option value="">‚Üì Select country ‚Üì</option>
             <optgroup label="UAE (Domestic)">
               <option value="UAE">United Arab Emirates</option>
             </optgroup>
@@ -2225,7 +2242,7 @@
         </div>
         <div class="om-field">
           <label class="om-field-label">Delivery Address</label>
-          <input class="om-input" id="om-address" type="text" placeholder="Street, city, postal code" autocomplete="street-address">
+          <input class="om-input" id="om-address" type="text" placeholder="Street, city, postal code" autocomplete="street-address" required>
         </div>
         <div class="om-field" id="om-shipping-field" style="display:none;">
           <label class="om-field-label">Shipping Method</label>
@@ -2238,13 +2255,14 @@
           <input class="om-input" id="om-note" type="text" placeholder="Any special requests or engraving details">
         </div>
       </div>
-
       <div class="om-order-summary" id="om-order-summary">
-        <div class="om-summary-row"><span>Product</span><span id="om-sum-product">ó</span></div>
-        <div class="om-summary-row"><span>Quantity</span><span id="om-sum-qty">ó</span></div>
-        <div class="om-summary-row"><span>Shipping</span><span id="om-sum-shipping">ó</span></div>
-        <div class="om-summary-row om-summary-total"><span>Total</span><span id="om-sum-total">ó</span></div>
+        <div class="om-summary-row"><span>Product</span><span id="om-sum-product">‚Äî</span></div>
+        <div class="om-summary-row"><span>Quantity</span><span id="om-sum-qty">‚Äî</span></div>
+        <div class="om-summary-row"><span>Shipping</span><span id="om-sum-shipping">‚Äî</span></div>
+        <div class="om-summary-row om-summary-total"><span>Total</span><span id="om-sum-total">‚Äî</span></div>
       </div>
+
+      <div class="om-form-error" id="om-form-error" role="alert"></div>
 
       <div class="om-step2-btns">
         <button class="om-back-btn" id="om-back-btn">? Back</button>
@@ -2279,6 +2297,30 @@
   </div>
 
   </div>
+
+<!-- PAYMENT IFRAME MODAL -->
+<div id="payment-modal" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.85); align-items:center; justify-content:center;">
+  <div style="position:relative; width:min(720px,96vw); height:min(680px,92vh); background:#111; border:1px solid #333; border-radius:8px; display:flex; flex-direction:column; overflow:hidden;">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid #222; flex-shrink:0;">
+      <div style="font-family:'Space Mono',monospace; font-size:0.7rem; letter-spacing:0.15em; color:#888; text-transform:uppercase;">Secure Payment</div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <a id="payment-fallback-link" href="#" target="_blank" rel="noopener noreferrer" style="font-family:'Space Mono',monospace; font-size:0.65rem; letter-spacing:0.1em; color:#c9a84c; text-decoration:none; border:1px solid #c9a84c; border-radius:3px; padding:5px 10px; white-space:nowrap;">Open in new tab &nearr;</a>
+        <button id="payment-modal-close" onclick="document.getElementById('payment-modal').style.display='none'; document.getElementById('payment-frame').src='';" style="background:none; border:none; color:#888; font-size:20px; cursor:pointer; line-height:1; padding:2px 6px;">&times;</button>
+      </div>
+    </div>
+    <div id="payment-frame-wrap" style="flex:1; position:relative;">
+      <div id="payment-frame-loading" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; color:#888; font-family:'DM Sans',sans-serif; font-size:0.9rem;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/></path></svg>
+        Loading secure payment...
+      </div>
+      <iframe id="payment-frame" src="" style="width:100%; height:100%; border:none; display:block;" allow="payment" onload="document.getElementById('payment-frame-loading').style.display='none';"></iframe>
+    </div>
+    <div style="padding:10px 18px; border-top:1px solid #1a1a1a; font-family:'Space Mono',monospace; font-size:0.6rem; color:#555; letter-spacing:0.08em; text-align:center; flex-shrink:0;">
+      üîí Payments are processed securely via Ziina &nbsp;&middot;&nbsp; isoboards.com
+    </div>
+  </div>
+</div>
+
 
 <script>
   // -- Board sets per Ritual --------------------------------------------------
@@ -2329,7 +2371,7 @@
       subtitle: 'ISO-ROOTS-BOARD',
       tag: '',
       spec: '',
-      desc: 'A handwritten recipe, letter, or signature ó etched into hardwood. A permanent piece from someone special.',
+      desc: 'A handwritten recipe, letter, or signature ‚Äî etched into hardwood. A permanent piece from someone special.',
       images: [
         { src: 'assets/roots-step-1.webp', stepIndex: 0, flip: false },
         { src: 'assets/roots-step-2.webp', stepIndex: 1, flip: false },
@@ -2990,7 +3032,7 @@
     });
   });
 
-  // -- Cart count removed ó ORDER NOW now opens the modal -------------------
+  // -- Cart count removed ‚Äî ORDER NOW now opens the modal -------------------
 
   // -- Auto-cycle (starts on Charcuterie board) ------------------------------
   relocateRitualsSubnav();
@@ -3035,7 +3077,7 @@
   })();
 
 
-  // -- See All Boards ó cycles through nav tabs -----------------------------
+  // -- See All Boards ‚Äî cycles through nav tabs -----------------------------
   const seeAllBtn = document.getElementById('see-all-boards-btn');
   if (seeAllBtn) {
     let seeAllIdx = 0;
@@ -3078,7 +3120,7 @@
   const fileChosen     = document.getElementById('om-file-chosen');
 
   const CURRENCY_FX     = { USD: 1, AED: 3.6725, EUR: 0.92, SAR: 3.75, QAR: 3.64, INR: 83.5 };
-  const CURRENCY_SYMS   = { USD: '$', AED: 'AED ', EUR: 'Ä', SAR: 'SAR ', QAR: 'QAR ', INR: '?' };
+  const CURRENCY_SYMS   = { USD: '$', AED: 'AED ', EUR: '‚Ç¨', SAR: 'SAR ', QAR: 'QAR ', INR: '‚Çπ' };
 
   function formatPrice(usdAmount, currency) {
     const rate = CURRENCY_FX[currency] || 1;
@@ -3092,15 +3134,15 @@
     const currency = (document.getElementById('om-pay-currency') || {}).value || 'USD';
     if (omQty === 1) {
       const p = formatPrice(188, currency);
-      omQtySummary.textContent = `1 board ó ${p}`;
-      omPricingNote.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Single board ó ${p}`;
+      omQtySummary.textContent = `1 board ‚Äî ${p}`;
+      omPricingNote.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Single board ‚Äî ${p}`;
     } else if (omQty === 2) {
       const p = formatPrice(188 * 2 * 0.9, currency);
-      omQtySummary.textContent = '2 boards ó 10% off';
-      omPricingNote.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 2 boards ó 10% discount applied (${p})`;
+      omQtySummary.textContent = '2 boards ‚Äî 10% off';
+      omPricingNote.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 2 boards ‚Äî 10% discount applied (${p})`;
     } else {
-      omQtySummary.textContent = omQty + ' boards ó special pricing';
-      omPricingNote.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 3+ boards ó we\'ll arrange a special deal on WhatsApp';
+      omQtySummary.textContent = omQty + ' boards ‚Äî special pricing';
+      omPricingNote.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 3+ boards ‚Äî we\'ll arrange a special deal on WhatsApp';
     }
   }
 
@@ -3180,7 +3222,7 @@
   // Step 1 ? Step 2
   omNextBtn.addEventListener('click', () => {
     // Update summary
-    const totalText = omQty === 1 ? '$188.00' : omQty === 2 ? '10% discount applied' : 'Special deal ó via WhatsApp';
+    const totalText = omQty === 1 ? '$188.00' : omQty === 2 ? '10% discount applied' : 'Special deal ‚Äî via WhatsApp';
     omSumProduct.textContent = omSelectedProduct;
     omSumQty.textContent     = omQty + (omQty === 1 ? ' board' : ' boards');
     const cur = document.getElementById('om-pay-currency') ? document.getElementById('om-pay-currency').value : 'USD';
@@ -3193,7 +3235,7 @@
     const countryEl = document.getElementById('om-country');
     countryEl.value = '';
     document.getElementById('om-shipping-field').style.display = 'none';
-    document.getElementById('om-sum-shipping').textContent = 'ó';
+    document.getElementById('om-sum-shipping').textContent = '‚Äî';
 
     // If 3+ boards, swap checkout button to WhatsApp
     if (omQty >= 3) {
@@ -3261,7 +3303,7 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
   }
 
   // Send order data (+ optional file) to the Apps Script via POST FormData.
-  // Apps Script must have a doPost() handler ó see comment block below.
+  // Apps Script must have a doPost() handler ‚Äî see comment block below.
   async function logToSheets(data) {
     try {
       const fd = new FormData();
@@ -3319,7 +3361,7 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
    */
 
   // -- ZIINA PAYMENT API ----------------------------------------------------
-  const ZIINA_API_KEY = '7k5A5fvms1LnTF3ayxqmX5sINEuL1AiMkOPL1DIk9C4/HB+HMT5iB7kp0d87Kdq1'; // ? paste your key here
+  const ZIINA_API_KEY = 'BONJOUR GET OUT'; // ? paste your key here
   const ZIINA_API_URL = 'https://api-v2.ziina.com/api/payment_intent';
   const SITE_URL = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
 
@@ -3393,7 +3435,7 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
       standard: { label: 'Express',  price: 197, priceLabel: 'AED 197', time: 'Within 13 working days' },
       express:  { label: 'Premium', price: 357, priceLabel: 'AED 357', time: 'Within 9 working days' }
     },
-    // Asia ó use India as baseline
+    // Asia ‚Äî use India as baseline
     'India': {
       standard: { label: 'Express',  price: 160, priceLabel: 'AED 160', time: 'Within 13 working days' },
       express:  { label: 'Premium', price: 294, priceLabel: 'AED 294', time: 'Within 9 working days' }
@@ -3414,7 +3456,7 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
       standard: { label: 'Express',  price: 160, priceLabel: 'AED 160', time: 'Within 13 working days' },
       express:  { label: 'Premium', price: 294, priceLabel: 'AED 294', time: 'Within 9 working days' }
     },
-    // Middle East ó use avg of Kuwait/Qatar/Bahrain
+    // Middle East ‚Äî use avg of Kuwait/Qatar/Bahrain
     'Jordan': {
       standard: { label: 'Express',  price: 123, priceLabel: 'AED 123', time: 'Within 13 working days' },
       express:  { label: 'Premium', price: 297, priceLabel: 'AED 297', time: 'Within 9 working days' }
@@ -3435,7 +3477,7 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
       standard: { label: 'Express',  price: 123, priceLabel: 'AED 123', time: 'Within 13 working days' },
       express:  { label: 'Premium', price: 297, priceLabel: 'AED 297', time: 'Within 9 working days' }
     },
-    // Africa ó use Kuwait rates
+    // Africa ‚Äî use Kuwait rates
     'Nigeria':      { standard: { label: 'Express', price: 120, priceLabel: 'AED 120', time: 'Within 13 working days' }, express: { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 working days' } },
     'Kenya':        { standard: { label: 'Express', price: 120, priceLabel: 'AED 120', time: 'Within 13 working days' }, express: { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 working days' } },
     'South Africa': { standard: { label: 'Express', price: 120, priceLabel: 'AED 120', time: 'Within 13 working days' }, express: { label: 'Premium', price: 295, priceLabel: 'AED 295', time: 'Within 9 working days' } },
@@ -3464,7 +3506,7 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
 
     const currency = (document.getElementById('om-pay-currency') || {}).value || 'AED';
     const FX      = { USD: 1, AED: 3.6725, EUR: 0.92, SAR: 3.75, QAR: 3.64, INR: 83.5 };
-    const SYMBOLS = { USD: '$', AED: 'AED ', EUR: 'Ä', SAR: 'SAR ', QAR: 'QAR ', INR: '?' };
+    const SYMBOLS = { USD: '$', AED: 'AED ', EUR: '‚Ç¨', SAR: 'SAR ', QAR: 'QAR ', INR: '‚Çπ' };
     const fxRate  = FX[currency] || 1;
     const sym     = SYMBOLS[currency] || currency + ' ';
     const decimals = ['USD','EUR'].includes(currency) ? 2 : 0;
@@ -3514,7 +3556,7 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
     
     // FX rates relative to USD
     const FX = { USD: 1, AED: 3.6725, EUR: 0.92, SAR: 3.75, QAR: 3.64, INR: 83.5 };
-    const SYMBOLS = { USD: '$', AED: 'AED ', EUR: 'Ä', SAR: 'SAR ', QAR: 'QAR ', INR: '?' };
+    const SYMBOLS = { USD: '$', AED: 'AED ', EUR: '‚Ç¨', SAR: 'SAR ', QAR: 'QAR ', INR: '‚Çπ' };
     const rate = FX[currency] || 1;
     const sym  = SYMBOLS[currency] || currency + ' ';
 
@@ -3532,6 +3574,32 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
     if (boardUSD > 0) sumTotal.textContent = `${sym}${(boardConverted + shippingConverted).toFixed(decimals)}`;
   }
 
+  function clearOmValidation() {
+    const nameEl = document.getElementById('om-name');
+    const countryEl = document.getElementById('om-country');
+    const addressEl = document.getElementById('om-address');
+    const errorEl = document.getElementById('om-form-error');
+
+    [nameEl, countryEl, addressEl].forEach(el => {
+      if (!el || !el.closest) return;
+      const field = el.closest('.om-field');
+      if (field && el.value && el.value.trim()) field.classList.remove('invalid');
+    });
+
+    if (errorEl && nameEl && countryEl && addressEl) {
+      if (nameEl.value.trim() && countryEl.value.trim() && addressEl.value.trim()) {
+        errorEl.textContent = '';
+        errorEl.style.display = 'none';
+      }
+    }
+  }
+
+  const omNameEl = document.getElementById('om-name');
+  const omCountryEl = document.getElementById('om-country');
+  const omAddressEl = document.getElementById('om-address');
+  if (omNameEl) omNameEl.addEventListener('input', clearOmValidation);
+  if (omAddressEl) omAddressEl.addEventListener('input', clearOmValidation);
+  if (omCountryEl) omCountryEl.addEventListener('change', clearOmValidation);
   document.getElementById('om-country').addEventListener('change', function() {
     omSelectedShipping = 'standard';
     renderShippingOptions(this.value);
@@ -3553,6 +3621,40 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
     const brief    = document.getElementById('om-custom-brief') ? document.getElementById('om-custom-brief').value.trim() : '';
     const file     = (rootsFileInput && rootsFileInput.files[0]) ? rootsFileInput.files[0] : null;
     const fileName = file ? file.name : '';
+    const nameEl = document.getElementById('om-name');
+    const countryEl = document.getElementById('om-country');
+    const addressEl = document.getElementById('om-address');
+    const errorEl = document.getElementById('om-form-error');
+
+    const markInvalid = (el) => {
+      if (!el || !el.closest) return;
+      const field = el.closest('.om-field');
+      if (field) field.classList.add('invalid');
+    };
+
+    [nameEl, countryEl, addressEl].forEach(el => {
+      if (!el || !el.closest) return;
+      const field = el.closest('.om-field');
+      if (field) field.classList.remove('invalid');
+    });
+    if (errorEl) {
+      errorEl.textContent = '';
+      errorEl.style.display = 'none';
+    }
+
+    let firstInvalid = null;
+    if (!nameEl || !nameEl.value.trim()) { markInvalid(nameEl); firstInvalid = firstInvalid || nameEl; }
+    if (!countryEl || !countryEl.value.trim()) { markInvalid(countryEl); firstInvalid = firstInvalid || countryEl; }
+    if (!addressEl || !addressEl.value.trim()) { markInvalid(addressEl); firstInvalid = firstInvalid || addressEl; }
+
+    if (firstInvalid) {
+      if (errorEl) {
+        errorEl.textContent = 'Please fill in Full Name, Delivery Country, and Delivery Address before proceeding.';
+        errorEl.style.display = 'block';
+      }
+      if (firstInvalid.focus) firstInvalid.focus();
+      return;
+    }
 
     // Determine selected shipping
     const shippingRates  = country ? getShippingRates(country) : null;
@@ -3562,7 +3664,7 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
 
     // Show loading state
     const originalHTML = omCheckoutBtn.innerHTML;
-    omCheckoutBtn.innerHTML = 'ProcessingÖ';
+    omCheckoutBtn.innerHTML = 'Processing‚Ä¶';
     omCheckoutBtn.disabled = true;
 
     // Read file as base64 if one was attached
@@ -3611,17 +3713,30 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
       const shippingUSD = shippingFee / 3.6725;
       const totalUSD = boardPriceUSD + shippingUSD;
       const paymentAmount = Math.round(totalUSD * fxRate * 100) / 100;
-      const description = `ISO Boards ó ${omQty}x ${omSelectedProduct}${shippingMethod ? ' ∑ ' + shippingMethod : ''}`;
+      const description = `ISO Boards ¬∑ ${omQty}x ${omSelectedProduct}${shippingMethod ? ' ¬∑ ' + shippingMethod : ''}`;
 
       const redirectUrl = await createZiinaPayment(paymentAmount, description, paymentCurrency);
       omCheckoutBtn.innerHTML = originalHTML;
       omCheckoutBtn.disabled  = false;
       omCloseModal();
       // Open Ziina payment page in a new tab
-      window.open(redirectUrl, '_blank', 'noopener,noreferrer');
+      // Show payment in in-page iframe modal with fallback link
+      const payModal = document.getElementById('payment-modal');
+      const payFrame = document.getElementById('payment-frame');
+      const payFallback = document.getElementById('payment-fallback-link');
+      const payLoading = document.getElementById('payment-frame-loading');
+      if (payModal && payFrame) {
+        payFallback.href = redirectUrl;
+        payFrame.src = '';
+        payLoading.style.display = 'flex';
+        payModal.style.display = 'flex';
+        setTimeout(() => { payFrame.src = redirectUrl; }, 80);
+      } else {
+        window.open(redirectUrl, '_blank', 'noopener,noreferrer');
+      }
     } catch (err) {
       console.error('Payment error:', err);
-      omCheckoutBtn.innerHTML = '? Payment Error ó Try Again';
+      omCheckoutBtn.innerHTML = '‚ö†Ô∏è Payment Error ‚Äì Try Again';
       omCheckoutBtn.disabled  = false;
       setTimeout(() => { omCheckoutBtn.innerHTML = originalHTML; }, 3000);
     }
@@ -3632,7 +3747,7 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
     relocateRitualsSubnav();
     relocateThemeToggle();
   });
+
 </script>
 </body>
 </html>
-
