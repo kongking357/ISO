@@ -750,6 +750,10 @@
     overflow: visible;
   }
 
+  @keyframes viewersFlash {
+    0%, 100% { color: #f0ede8; opacity: 1; }
+    50%       { color: #aaaaaa; opacity: 0.7; }
+  }
   .ab-coord {
     font-family: 'Space Mono', monospace;
     font-size: 0.68rem; letter-spacing: 0.16em;
@@ -758,6 +762,15 @@
     border-right: 1px solid var(--accent-secondary);
     margin-right: 0;
     white-space: nowrap;
+  }
+  .ab-viewers {
+    display: block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.56rem; letter-spacing: 0.1em;
+    color: #f0ede8;
+    margin-top: 3px;
+    white-space: nowrap;
+    animation: viewersFlash 1.8s ease-in-out infinite;
   }
 
   .ab-btn {
@@ -1572,8 +1585,65 @@
     padding-left: 4px; opacity: 0.8;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  /* Hide preview col on small screens */
+  .om-preview-viewers {
+    font-family: 'Space Mono', monospace; font-size: 0.58rem;
+    letter-spacing: 0.1em; color: #f0ede8; margin-top: 6px;
+    animation: viewersFlash 1.8s ease-in-out infinite;
+    min-height: 1em;
+  }
+
+  /* ── Mobile inline product preview ── */
+  .om-product-inline-preview {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.42s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease, margin-top 0.3s ease;
+    margin-top: 0;
+  }
+  .om-product.active .om-product-inline-preview {
+    max-height: 600px;
+    opacity: 1;
+    margin-top: 12px;
+  }
+  .om-product-inline-imgs {
+    display: flex; gap: 8px;
+  }
+  .om-product-inline-img-wrap {
+    flex: 1; border-radius: 8px; overflow: hidden;
+    border: 1px solid var(--accent-secondary);
+    background: var(--bg-secondary);
+    position: relative;
+  }
+  .om-product-inline-img-label {
+    font-family: 'Space Mono', monospace; font-size: 0.5rem;
+    letter-spacing: 0.14em; color: var(--status-label);
+    text-transform: uppercase;
+    position: absolute; top: 6px; left: 8px; z-index: 2;
+    background: rgba(0,0,0,0.55); padding: 2px 5px; border-radius: 3px;
+  }
+  .om-product-inline-img-wrap img {
+    width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block;
+  }
+  .om-product-inline-viewers {
+    font-family: 'Space Mono', monospace; font-size: 0.58rem;
+    letter-spacing: 0.1em; color: #f0ede8;
+    animation: viewersFlash 1.8s ease-in-out infinite;
+    padding-left: 2px;
+  }
+
+  /* Only show inline previews on mobile */
+  @media (min-width: 721px) {
+    .om-product-inline-preview { display: none !important; }
+  }
   @media (max-width: 720px) {
+    .om-product { align-items: flex-start; flex-wrap: wrap; }
+    .om-product-inline-preview { display: flex; }
+    .om-product-info { flex: 1; }
+  }
     .order-modal-panel { flex-direction: column; max-width: 480px; }
     .om-form-col { flex: none; }
     .om-preview-col { display: none; }
@@ -2302,6 +2372,7 @@
     <div class="om-preview-label">
       <div class="om-preview-label-name" id="om-preview-label-name">Cheese &amp; Charcuterie</div>
       <div class="om-preview-label-sub" id="om-preview-label-sub">ISO-CHEESEPAIRING-RITUALS</div>
+      <div class="om-preview-viewers" id="om-preview-viewers"></div>
     </div>
   </div>
 
@@ -3215,14 +3286,54 @@
     }, 280);
   }
 
+  // Assign random viewer counts per product (stable for the session)
+  const omViewerCounts = {};
+  document.querySelectorAll('.om-product').forEach(p => {
+    omViewerCounts[p.dataset.product] = Math.floor(Math.random() * 5); // 0–4
+  });
+
+  function omViewersText(key) {
+    const n = omViewerCounts[key] ?? 0;
+    return n === 1 ? '1 person viewing' : `${n} people viewing`;
+  }
+
+  // Inject mobile inline preview panels into each product
+  document.querySelectorAll('.om-product').forEach(p => {
+    const key = p.dataset.product;
+    const preview = omProductPreviews[key];
+    if (!preview) return;
+    const panel = document.createElement('div');
+    panel.className = 'om-product-inline-preview';
+    panel.innerHTML = `
+      <div class="om-product-inline-imgs">
+        <div class="om-product-inline-img-wrap">
+          <div class="om-product-inline-img-label">Front</div>
+          <img loading="lazy" src="${preview.front}" alt="Front">
+        </div>
+        <div class="om-product-inline-img-wrap">
+          <div class="om-product-inline-img-label">Back</div>
+          <img loading="lazy" src="${preview.back}" alt="Back">
+        </div>
+      </div>
+      <div class="om-product-inline-viewers">${omViewersText(key)}</div>`;
+    p.appendChild(panel);
+  });
+
+  // Desktop preview col viewers
+  const omPreviewViewers = document.getElementById('om-preview-viewers');
+
   document.querySelectorAll('.om-product').forEach(p => {
     p.addEventListener('click', () => {
       document.querySelectorAll('.om-product').forEach(x => x.classList.remove('active'));
       p.classList.add('active');
       omSelectedProduct = p.dataset.product;
       omUpdatePreview(omSelectedProduct);
+      if (omPreviewViewers) omPreviewViewers.textContent = omViewersText(omSelectedProduct);
     });
   });
+
+  // Init desktop viewers for the default selected product
+  if (omPreviewViewers) omPreviewViewers.textContent = omViewersText(omSelectedProduct);
 
   // Quantity
   omQtyMinus.addEventListener('click', () => { if (omQty > 1) { omQty--; omUpdateQtyUI(); } });
@@ -3737,6 +3848,16 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
       omCheckoutBtn.disabled  = false;
       setTimeout(() => { omCheckoutBtn.innerHTML = originalHTML; }, 3000);
     }
+  });
+
+  // Inject random "X people viewing" under each product label
+  document.querySelectorAll('.ab-product-info').forEach((info, i) => {
+    const count = Math.floor(Math.random() * 5); // 0–4
+    const span = document.createElement('span');
+    span.className = 'ab-viewers';
+    span.textContent = count === 1 ? '1 person viewing' : `${count} people viewing`;
+    span.style.animationDelay = `${(i * 0.37).toFixed(2)}s`;
+    info.appendChild(span);
   });
 
   window.addEventListener('resize', () => {
