@@ -316,7 +316,7 @@
     display: inline-flex; align-items: center; gap: 10px;
     font-family: 'Space Mono', monospace; font-size: 0.7rem;
     letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--text-secondary); border: 1px solid var(--accent-secondary);
+    color: var(--text-primary); border: 1px solid var(--accent-primary);
     border-radius: 2px;
     padding: 12px 22px; text-decoration: none; transition: all 0.2s;
   }
@@ -885,7 +885,8 @@
       margin-right: 8px; /* keep a little breathing room on the right */
     }
     .coords { word-break: break-word; }
-    .ctas .btn-primary { justify-content: center; text-align: center; }
+    .ctas { flex-wrap: wrap; }
+    .ctas .btn-primary, .ctas .btn-ghost { justify-content: center; text-align: center; flex: 1 1 auto; }
     .fill-steps { grid-template-columns: 1fr; }
     .fill-step { width: 100%; }
     .anns-right { right: -140px; }
@@ -1943,6 +1944,10 @@
       <a href="#" class="btn-primary" id="hero-order-btn">
         <span>ORDER NOW</span>
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+      <a href="mailto:info@isoboards.com" class="btn-ghost">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+        <span>CONTACT US</span>
       </a>
     </div>
     <div class="palette">
