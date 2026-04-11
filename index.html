@@ -1849,6 +1849,10 @@
     font-family: 'Space Mono', monospace; font-size: 0.72rem;
     letter-spacing: 0.08em; color: var(--text-secondary);
   }
+  .om-shipping-notice {
+    font-family: 'DM Sans', sans-serif; font-size: 0.68rem;
+    color: var(--status-label); font-style: italic; margin-top: 2px;
+  }
   .om-shipping-price {
     font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem;
     letter-spacing: 0.08em; color: var(--lux-gold);
@@ -3532,6 +3536,7 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
           <div class="om-shipping-info">
             <div class="om-shipping-name">${r.label}</div>
             <div class="om-shipping-time">${r.time}</div>
+            <div class="om-shipping-notice">Current events may impact shipping times.</div>
           </div>
           ${priceHtml}
         </div>`;
