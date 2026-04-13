@@ -771,6 +771,7 @@
     margin-top: 3px;
     white-space: nowrap;
     animation: viewersFlash 1.8s ease-in-out infinite;
+    animation-delay: 0s !important;
   }
 
   .ab-btn {
@@ -1011,6 +1012,16 @@
       line-height: 1.25;
       color: var(--text-primary) !important;
       word-break: break-word;
+    }
+    .ab-viewers {
+      font-size: 0.42rem !important;
+      white-space: normal !important;
+      word-break: break-word;
+      max-width: 100%;
+      display: block;
+      text-align: center;
+      line-height: 1.3;
+      margin-top: 2px;
     }
     .micro-serial { right: 18px; bottom: 84px; }
     .fill-steps {
@@ -3855,8 +3866,8 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
     const count = Math.floor(Math.random() * 5); // 0–4
     const span = document.createElement('span');
     span.className = 'ab-viewers';
-    span.textContent = count === 1 ? '1 person viewing' : `${count} people viewing`;
-    span.style.animationDelay = `${(i * 0.37).toFixed(2)}s`;
+    span.innerHTML = count === 1 ? '1<br>person viewing' : `${count}<br>people viewing`;
+    // No individual delay — all viewers pulse in sync
     info.appendChild(span);
   });
 
