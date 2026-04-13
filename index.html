@@ -2158,7 +2158,7 @@
 
   <div class="ab-price">
     <span class="ab-price-label">PRICE</span>
-    <span id="ab-price-display">$188.00</span>
+    $188.00
     <span class="ab-discount-note">10% off on 2+ orders</span>
   </div>
   <a href="#" class="ab-btn ab-cta" id="add-to-cart" style="border-left:1px solid var(--accent-secondary); border-right:none; padding: 0 26px;">
@@ -3220,20 +3220,15 @@
     return `${sym}${(usdAmount * rate).toFixed(decimals)}`;
   }
 
-  function boardBasePrice() {
-    return omSelectedProduct === 'Custom Commission' ? 1 : 188;
-  }
-
   function omUpdateQtyUI() {
     omQtyVal.textContent = omQty;
     const currency = (document.getElementById('om-pay-currency') || {}).value || 'USD';
-    const base = boardBasePrice();
     if (omQty === 1) {
-      const p = formatPrice(base, currency);
+      const p = formatPrice(188, currency);
       omQtySummary.textContent = `1 board — ${p}`;
       omPricingNote.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Single board — ${p}`;
     } else if (omQty === 2) {
-      const p = formatPrice(base * 2 * 0.9, currency);
+      const p = formatPrice(188 * 2 * 0.9, currency);
       omQtySummary.textContent = '2 boards — 10% off';
       omPricingNote.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 2 boards — 10% discount applied (${p})`;
     } else {
@@ -3346,8 +3341,6 @@
       omUpdatePreview(omSelectedProduct);
       if (omPreviewViewers) omPreviewViewers.textContent = omViewersText(omSelectedProduct);
       omUpdateQtyUI();
-      const abPrice = document.getElementById('ab-price-display');
-      if (abPrice) abPrice.textContent = boardBasePrice() === 1 ? '$1.00' : '$188.00';
     });
   });
 
@@ -3361,12 +3354,11 @@
   // Step 1 ? Step 2
   omNextBtn.addEventListener('click', () => {
     // Update summary
-    const base = boardBasePrice();
     omSumProduct.textContent = omSelectedProduct;
     omSumQty.textContent     = omQty + (omQty === 1 ? ' board' : ' boards');
     const cur = document.getElementById('om-pay-currency') ? document.getElementById('om-pay-currency').value : 'USD';
     const symbol = cur === 'USD' ? '$' : 'AED ';
-    const price = cur === 'USD' ? base : (base * 3.6725);
+    const price = cur === 'USD' ? 188 : (188 * 3.6725);
     omSumTotal.textContent = omQty === 1 ? `${symbol}${price.toFixed(cur === 'USD' ? 2 : 0)}` : omQty === 2 ? 'Contact for 10% off total' : 'Contact for pricing';
 
     // Reset shipping selection when entering step 2
@@ -3705,8 +3697,7 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
     const shippingUSD = shippingAED / 3.6725;
     const shippingConverted = shippingUSD * rate;
 
-    const base = boardBasePrice();
-    const boardUSD = omQty === 1 ? base : omQty === 2 ? (base * 2 * 0.9) : 0;
+    const boardUSD = omQty === 1 ? 188 : omQty === 2 ? (188 * 2 * 0.9) : 0;
     const boardConverted = boardUSD * rate;
     
     const decimals = ['USD','EUR'].includes(currency) ? 2 : 0;
@@ -3849,7 +3840,7 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
       const paymentCurrency = (currencyEl ? currencyEl.value : 'USD') || 'USD';
 
       const fxRate = CURRENCY_FX[paymentCurrency] || 1;
-      const boardPriceUSD = omQty === 1 ? boardBasePrice() : boardBasePrice() * 2 * 0.9; // 10% off for 2
+      const boardPriceUSD = omQty === 1 ? 188 : 188 * 2 * 0.9; // 10% off for 2
       // shippingFee is always in AED; convert to USD first, then to payment currency
       const shippingUSD = shippingFee / 3.6725;
       const totalUSD = boardPriceUSD + shippingUSD;
