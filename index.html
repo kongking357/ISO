@@ -3860,7 +3860,6 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
       omCheckoutBtn.innerHTML = originalHTML;
       omCheckoutBtn.disabled  = false;
       omCloseModal();
-      window.open('https://www.isoboards.com', '_blank', 'noopener,noreferrer');
       window.location.href = redirectUrl;
     } catch (err) {
       console.error('Payment error:', err);
