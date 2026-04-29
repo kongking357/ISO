@@ -840,6 +840,16 @@
     letter-spacing: 0.12em; color: var(--status-label);
     text-transform: uppercase; display: block; margin-bottom: 2px;
   }
+  .ab-price-compare {
+    font-size: 1rem;
+    color: rgba(240,237,232,0.45);
+    text-decoration: line-through;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  .ab-price-current {
+    vertical-align: middle;
+  }
   .ab-discount-note {
     display: block;
     font-family: 'Space Mono', monospace; font-size: 0.625rem;
@@ -1661,10 +1671,15 @@
   }
   .om-header {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 22px 24px 18px;
+    gap: 14px;
+    padding: 22px 24px 18px 28px;
     border-bottom: 1px solid var(--accent-secondary);
   }
-  .om-header-left { display: flex; flex-direction: column; gap: 3px; }
+  .om-header-left {
+    display: flex; flex-direction: column; gap: 3px;
+    flex: 1;
+    min-width: 0;
+  }
   .om-label {
     font-family: 'Space Mono', monospace; font-size: 0.58rem;
     letter-spacing: 0.22em; color: var(--lux-gold); text-transform: uppercase;
@@ -1672,6 +1687,8 @@
   .om-title {
     font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem;
     letter-spacing: 0.08em; color: var(--text-primary);
+    line-height: 1;
+    white-space: normal;
   }
   .om-close {
     width: 36px; height: 36px; border-radius: 10px;
@@ -2158,8 +2175,9 @@
 
   <div class="ab-price">
     <span class="ab-price-label">PRICE</span>
-    $188.00
-    <span class="ab-discount-note">10% off on 2+ orders</span>
+    <span class="ab-price-compare">$229.00</span>
+    <span class="ab-price-current">$174.00</span>
+    <span class="ab-discount-note">Pre-launch price</span>
   </div>
   <a href="#" class="ab-btn ab-cta" id="add-to-cart" style="border-left:1px solid var(--accent-secondary); border-right:none; padding: 0 26px;">
     <span class="ab-iconbox">
@@ -2250,12 +2268,12 @@
         <button class="om-qty-btn" id="om-qty-minus">-</button>
         <span class="om-qty-val" id="om-qty-val">1</span>
         <button class="om-qty-btn" id="om-qty-plus">+</button>
-        <div class="om-qty-summary" id="om-qty-summary">1 board · $188.00</div>
+        <div class="om-qty-summary" id="om-qty-summary">1 board · $174.00</div>
       </div>
 
       <div class="om-pricing-note" id="om-pricing-note">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        Single board · $188.00
+        Single board · $174.00 pre-launch
       </div>
 
       <button class="om-next-btn" id="om-next-btn">
@@ -3212,6 +3230,7 @@
 
   const CURRENCY_FX     = { USD: 1, AED: 3.6725, EUR: 0.92, SAR: 3.75, QAR: 3.64, INR: 83.5 };
   const CURRENCY_SYMS   = { USD: '$', AED: 'AED ', EUR: '€', SAR: 'SAR ', QAR: 'QAR ', INR: '₹' };
+  const BOARD_PRICE_USD = 174;
 
   function formatPrice(usdAmount, currency) {
     const rate = CURRENCY_FX[currency] || 1;
@@ -3224,11 +3243,11 @@
     omQtyVal.textContent = omQty;
     const currency = (document.getElementById('om-pay-currency') || {}).value || 'USD';
     if (omQty === 1) {
-      const p = formatPrice(188, currency);
+      const p = formatPrice(BOARD_PRICE_USD, currency);
       omQtySummary.textContent = `1 board — ${p}`;
-      omPricingNote.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Single board — ${p}`;
+      omPricingNote.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Single board — ${p} pre-launch`;
     } else if (omQty === 2) {
-      const p = formatPrice(188 * 2 * 0.9, currency);
+      const p = formatPrice(BOARD_PRICE_USD * 2 * 0.9, currency);
       omQtySummary.textContent = '2 boards — 10% off';
       omPricingNote.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 2 boards — 10% discount applied (${p})`;
     } else {
@@ -3358,7 +3377,7 @@
     omSumQty.textContent     = omQty + (omQty === 1 ? ' board' : ' boards');
     const cur = document.getElementById('om-pay-currency') ? document.getElementById('om-pay-currency').value : 'USD';
     const symbol = cur === 'USD' ? '$' : 'AED ';
-    const price = cur === 'USD' ? 188 : (188 * 3.6725);
+    const price = cur === 'USD' ? BOARD_PRICE_USD : (BOARD_PRICE_USD * 3.6725);
     omSumTotal.textContent = omQty === 1 ? `${symbol}${price.toFixed(cur === 'USD' ? 2 : 0)}` : omQty === 2 ? 'Contact for 10% off total' : 'Contact for pricing';
 
     // Reset shipping selection when entering step 2
@@ -3697,7 +3716,7 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
     const shippingUSD = shippingAED / 3.6725;
     const shippingConverted = shippingUSD * rate;
 
-    const boardUSD = omQty === 1 ? 188 : omQty === 2 ? (188 * 2 * 0.9) : 0;
+    const boardUSD = omQty === 1 ? BOARD_PRICE_USD : omQty === 2 ? (BOARD_PRICE_USD * 2 * 0.9) : 0;
     const boardConverted = boardUSD * rate;
     
     const decimals = ['USD','EUR'].includes(currency) ? 2 : 0;
@@ -3840,7 +3859,7 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
       const paymentCurrency = (currencyEl ? currencyEl.value : 'USD') || 'USD';
 
       const fxRate = CURRENCY_FX[paymentCurrency] || 1;
-      const boardPriceUSD = omQty === 1 ? 188 : 188 * 2 * 0.9; // 10% off for 2
+      const boardPriceUSD = omQty === 1 ? BOARD_PRICE_USD : BOARD_PRICE_USD * 2 * 0.9; // 10% off for 2
       // shippingFee is always in AED; convert to USD first, then to payment currency
       const shippingUSD = shippingFee / 3.6725;
       const totalUSD = boardPriceUSD + shippingUSD;
