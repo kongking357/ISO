@@ -1,6 +1,18 @@
 User-agent: *
 Disallow:
 
+# --- ALLOW AI SEARCH (Referral Traffic) ---
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+Crawl-delay: 5
+
+User-agent: Claude-SearchBot
+Allow: /
+
+# --- BLOCK AI TRAINING (Data Scraping) ---
 User-agent: GPTBot
 Disallow: /
 
@@ -8,6 +20,9 @@ User-agent: Google-Extended
 Disallow: /
 
 User-agent: CCBot
+Disallow: /
+
+User-agent: ClaudeBot
 Disallow: /
 
 User-agent: anthropic-ai
