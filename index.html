@@ -2327,6 +2327,10 @@
           <input class="om-input" id="om-name" type="text" placeholder="Your name" autocomplete="name" required>
         </div>
         <div class="om-field">
+          <label class="om-field-label">Phone Number</label>
+          <input class="om-input" id="om-phone" type="tel" placeholder="+961 70 123 456" autocomplete="tel" required>
+        </div>
+        <div class="om-field">
           <label class="om-field-label">Delivery Country</label>
           <select class="om-select" id="om-country" required>
             <option value="">↓ Select country ↓</option>
@@ -3548,6 +3552,7 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
       fd.append('product',        data.product       || '');
       fd.append('quantity',       String(data.quantity !== undefined ? data.quantity : ''));
       fd.append('name',           data.name          || '');
+      fd.append('phone',          data.phone         || '');
       fd.append('note',           data.note          || '');
       fd.append('brief',          data.brief         || '');
       fd.append('fileName',       data.fileName      || '');
@@ -3816,18 +3821,19 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
 
   function clearOmValidation() {
     const nameEl = document.getElementById('om-name');
+    const phoneEl = document.getElementById('om-phone');
     const countryEl = document.getElementById('om-country');
     const addressEl = document.getElementById('om-address');
     const errorEl = document.getElementById('om-form-error');
 
-    [nameEl, countryEl, addressEl].forEach(el => {
+    [nameEl, phoneEl, countryEl, addressEl].forEach(el => {
       if (!el || !el.closest) return;
       const field = el.closest('.om-field');
       if (field && el.value && el.value.trim()) field.classList.remove('invalid');
     });
 
-    if (errorEl && nameEl && countryEl && addressEl) {
-      if (nameEl.value.trim() && countryEl.value.trim() && addressEl.value.trim()) {
+    if (errorEl && nameEl && phoneEl && countryEl && addressEl) {
+      if (nameEl.value.trim() && phoneEl.value.trim() && countryEl.value.trim() && addressEl.value.trim()) {
         errorEl.textContent = '';
         errorEl.style.display = 'none';
       }
@@ -3835,9 +3841,11 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
   }
 
   const omNameEl = document.getElementById('om-name');
+  const omPhoneEl = document.getElementById('om-phone');
   const omCountryEl = document.getElementById('om-country');
   const omAddressEl = document.getElementById('om-address');
   if (omNameEl) omNameEl.addEventListener('input', clearOmValidation);
+  if (omPhoneEl) omPhoneEl.addEventListener('input', clearOmValidation);
   if (omAddressEl) omAddressEl.addEventListener('input', clearOmValidation);
   if (omCountryEl) omCountryEl.addEventListener('change', clearOmValidation);
   document.getElementById('om-country').addEventListener('change', function() {
@@ -3858,6 +3866,7 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
   // Checkout / WhatsApp
   omCheckoutBtn.addEventListener('click', async () => {
     const name     = document.getElementById('om-name').value.trim();
+    const phone    = document.getElementById('om-phone').value.trim();
     const note     = document.getElementById('om-note').value.trim();
     const country  = document.getElementById('om-country').value.trim();
     const address  = document.getElementById('om-address').value.trim();
@@ -3865,6 +3874,7 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
     const file     = (rootsFileInput && rootsFileInput.files[0]) ? rootsFileInput.files[0] : null;
     const fileName = file ? file.name : '';
     const nameEl = document.getElementById('om-name');
+    const phoneEl = document.getElementById('om-phone');
     const countryEl = document.getElementById('om-country');
     const addressEl = document.getElementById('om-address');
     const errorEl = document.getElementById('om-form-error');
@@ -3875,7 +3885,7 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
       if (field) field.classList.add('invalid');
     };
 
-    [nameEl, countryEl, addressEl].forEach(el => {
+    [nameEl, phoneEl, countryEl, addressEl].forEach(el => {
       if (!el || !el.closest) return;
       const field = el.closest('.om-field');
       if (field) field.classList.remove('invalid');
@@ -3887,12 +3897,13 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
 
     let firstInvalid = null;
     if (!nameEl || !nameEl.value.trim()) { markInvalid(nameEl); firstInvalid = firstInvalid || nameEl; }
+    if (!phoneEl || !phoneEl.value.trim()) { markInvalid(phoneEl); firstInvalid = firstInvalid || phoneEl; }
     if (!countryEl || !countryEl.value.trim()) { markInvalid(countryEl); firstInvalid = firstInvalid || countryEl; }
     if (!addressEl || !addressEl.value.trim()) { markInvalid(addressEl); firstInvalid = firstInvalid || addressEl; }
 
     if (firstInvalid) {
       if (errorEl) {
-        errorEl.textContent = 'Please fill in Full Name, Delivery Country, and Delivery Address before proceeding.';
+        errorEl.textContent = 'Please fill in Full Name, Phone Number, Delivery Country, and Delivery Address before proceeding.';
         errorEl.style.display = 'block';
       }
       if (firstInvalid.focus) firstInvalid.focus();
@@ -3920,7 +3931,7 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
     // Log to Google Sheets
     await logToSheets({
       product: omSelectedProduct, quantity: omQty,
-      name: name || '', note: note || '', brief: brief || '',
+      name: name || '', phone: phone || '', note: note || '', brief: brief || '',
       fileName: fileName || '', fileData, fileMimeType,
       country: country || '', address: address || '',
       shippingMethod, shippingFee,
@@ -3944,6 +3955,7 @@ async function createZiinaPayment(amount, message, currency = 'USD') {
       const msg = encodeURIComponent(
         `Hi ISO Boards! I'd like to order ${omQty}x ${omSelectedProduct}.` +
         (name           ? `\nName: ${name}`                         : '') +
+        (phone          ? `\nPhone: ${phone}`                       : '') +
         (country        ? `\nCountry: ${country}`                   : '') +
         (address        ? `\nAddress: ${address}`                   : '') +
         (shippingMethod ? `\nShipping: ${shippingMethod} (${shippingFee === 0 ? 'FREE' : 'AED ' + shippingFee})` : '') +
